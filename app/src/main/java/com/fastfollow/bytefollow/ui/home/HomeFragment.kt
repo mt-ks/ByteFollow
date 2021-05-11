@@ -35,5 +35,6 @@ class HomeFragment : Fragment() {
             val navController = Navigation.findNavController(view)
             navController.navigate(R.id.action_homeFragment_to_loginFragment)
         }
+
     }
 }
