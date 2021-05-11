@@ -2,7 +2,6 @@ package com.fastfollow.bytefollow.ui.login
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +11,15 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.fastfollow.bytefollow.databinding.FragmentLoginBinding
-import com.fastfollow.bytefollow.helpers.JsonFieldChecker
+import com.fastfollow.bytefollow.helpers.UserRequireChecker
+import com.fastfollow.bytefollow.model.UserInfo
 import com.fastfollow.bytefollow.service.TKApi
 import com.fastfollow.bytefollow.service.TKClient
 import com.fastfollow.bytefollow.storage.UserStorage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.json.JSONObject
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+
 
 class LoginFragment : Fragment() {
     private val TAG : String = "LoginFragment"
@@ -73,7 +71,7 @@ class LoginFragment : Fragment() {
                 if(it.message == "success")
                 {
                     userStorage.cookie = cookieString
-                    getUserInfo(it.data.username)
+                    getUserInfo(it.data.username, cookieString)
                 }
             },{
 
@@ -81,37 +79,37 @@ class LoginFragment : Fragment() {
 
     }
 
-    private fun getUserInfo(username: String)
+    private fun getUserInfo(username: String, cookieString: String)
     {
+        if (isAuthenticated){ return }
         val api = TKClient(requireContext()).getClient().create(TKApi::class.java)
         compositeDisposable?.add(api.getUserInfo(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                val pattern : Pattern = Pattern.compile(
-                    "(.*?)<script id=\"__NEXT_DATA__\" type=\"application/json\"(.*?)>(.*?)</script>(.*?)",
-                    Pattern.CASE_INSENSITIVE or Pattern.DOTALL)
-                val matcher : Matcher = pattern.matcher(it.string())
-                if(matcher.matches() && matcher.groupCount() >= 3)
+                val check = UserRequireChecker(it)
+                if (check.checkUser())
                 {
-                    val userData : String = matcher.group(3)?:""
-                    val jsonData : JSONObject = JSONObject(userData)
-                    if(JsonFieldChecker("props>pageProps>userInfo>user",jsonData).check()){
-                        val userInfo = jsonData.getJSONObject("props").getJSONObject("pageProps").getJSONObject("userInfo").getJSONObject("user");
-                        Log.d(TAG,"MyDAta: " + userInfo.toString())
-                    }
+                    isAuthenticated = true;
+                    userStorage.user_info = check.userInfo
+                    userStorage.user_id = check.userInfo.id
+                    userStorage.cookie = cookieString
+                    userStorage.username = check.userInfo.uniqueId
+                    registerDevice(check.userInfo)
                 }
+
             },{
 
             }))
     }
 
-    private fun registerDevice()
+    private fun registerDevice(userInfo : UserInfo)
     {
-
+        activity?.finish()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        compositeDisposable?.clear()
     }
 
 }

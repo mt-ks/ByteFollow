@@ -5,7 +5,7 @@ import org.json.JSONObject
 class JsonFieldChecker(var field: String, var jsonData: JSONObject) {
     fun check() : Boolean {
         val data : List<String>  = field.split(">")
-        for (i in 0..data.size) {
+        for (i in data.indices) {
             if (!jsonData.has(data[i])){
                 return false;
             }
