@@ -1,5 +1,6 @@
 package com.fastfollow.bytefollow.helpers
 
+import com.fastfollow.bytefollow.model.UserDetail
 import com.fastfollow.bytefollow.model.UserInfo
 import com.google.gson.Gson
 import okhttp3.ResponseBody
@@ -8,7 +9,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class UserRequireChecker(private val responseBody: ResponseBody) {
-    lateinit var userInfo : UserInfo
+    lateinit var userDetail : UserDetail
 
     fun checkUser() : Boolean
     {
@@ -21,8 +22,8 @@ class UserRequireChecker(private val responseBody: ResponseBody) {
             val dataMatches : String = matcher.group(3)?:""
             val jsonData : JSONObject = JSONObject(dataMatches)
             if(JsonFieldChecker("props>pageProps>userInfo>user",jsonData).check()){
-                val jsonDataInfo = jsonData.getJSONObject("props").getJSONObject("pageProps").getJSONObject("userInfo").getJSONObject("user");
-                userInfo = Gson().fromJson(jsonDataInfo.toString(),UserInfo::class.java)
+                val jsonDataInfo = jsonData.getJSONObject("props").getJSONObject("pageProps").getJSONObject("userInfo");
+                userDetail = Gson().fromJson(jsonDataInfo.toString(),UserDetail::class.java)
                 return true;
             }
             return false;

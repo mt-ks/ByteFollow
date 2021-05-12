@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import com.fastfollow.bytefollow.model.UserInfo
 import com.google.gson.Gson
 import android.provider.Settings
+import com.fastfollow.bytefollow.model.UserDetail
 import java.util.*
 
 class UserStorage(var context: Context) {
@@ -25,8 +26,8 @@ class UserStorage(var context: Context) {
         get() = sharedPreferences.getString("cookie","")?:""
         set(value) { sharedPreferences.edit().putString("cookie",value).apply() }
 
-    var user_info : UserInfo
-        get() { val info = sharedPreferences.getString("user_info","{}"); return Gson().fromJson(info,UserInfo::class.java) }
+    var user_detail : UserDetail
+        get() { val info = sharedPreferences.getString("user_info","{}"); return Gson().fromJson(info,UserDetail::class.java) }
         set(value) { sharedPreferences.edit().putString("user_info",Gson().toJson(value)).apply() }
 
     var device_id : String

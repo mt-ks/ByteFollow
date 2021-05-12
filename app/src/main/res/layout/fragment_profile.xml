@@ -4,4 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_gravity="center"
+        android:background="@drawable/avatar_bg"
+        android:id="@+id/userAvatar"
+        android:layout_width="65dp"
+        android:layout_height="65dp" />
+
+
 </LinearLayout>
