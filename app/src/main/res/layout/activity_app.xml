@@ -6,30 +6,96 @@
     android:layout_height="match_parent"
     tools:context=".AppActivity">
 
+    <LinearLayout
+        android:background="@color/white"
+        android:elevation="2dp"
+        android:id="@+id/menuArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/nav_host_fragment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:fontFamily="cursive"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:text="ByteFollow"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/app_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="RtlHardcoded" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:gravity="right"
+                android:paddingVertical="2dp"
+                android:background="@drawable/credit_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="15dp"
+                tools:ignore="RtlHardcoded">
+                <ImageView
+                    android:src="@drawable/ic_coin"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+                <TextView
+                    android:textAlignment="center"
+                    android:paddingLeft="5dp"
+                    android:textColor="@color/black"
+                    android:text="0"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="60dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-
-        app:defaultNavHost="true"
+        app:layout_constraintTop_toBottomOf="@+id/menuArea"
         app:navGraph="@navigation/user_nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        app:labelVisibilityMode="unlabeled"
-        app:itemIconSize="25sp"
         android:layout_height="60dp"
+        app:itemIconSize="25sp"
         app:itemIconTint="@drawable/menu_item_selector"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

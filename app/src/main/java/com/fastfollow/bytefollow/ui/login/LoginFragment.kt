@@ -39,7 +39,7 @@ class LoginFragment : Fragment() {
     private var compositeDisposable : CompositeDisposable?= null
     private lateinit var userStorage : UserStorage
     private lateinit var loadingDialog : LoadingDialog
-
+    private lateinit var webview : WebView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,7 +56,7 @@ class LoginFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val webview = binding.webView;
+        webview = binding.webView;
         webview.settings.domStorageEnabled = true
         webview.settings.javaScriptEnabled = true
         webview.loadUrl("https://www.tiktok.com/login")
@@ -74,7 +74,7 @@ class LoginFragment : Fragment() {
     {
         if (isAuthenticated){ return }
         loadingDialog.start()
-        val api = TKClient(requireContext()).setDynamicCookie(cookieString).getClient().create(TKApi::class.java)
+        val api = TKClient(requireActivity()).setDynamicCookie(cookieString).getClient().create(TKApi::class.java)
         compositeDisposable?.add(api.checkCookie().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe ({
                 if(it.message == "success")
@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
 
     private fun getUserInfo(username: String, cookieString: String)
     {
-        val api = TKClient(requireContext()).getClient().create(TKApi::class.java)
+        val api = TKClient(requireActivity()).getClient().create(TKApi::class.java)
         compositeDisposable?.add(api.getUserInfo(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 val check = UserRequireChecker(it)
@@ -112,7 +112,7 @@ class LoginFragment : Fragment() {
     private fun registerDevice(userDetail : UserDetail, cookieString: String)
     {
         Log.d(TAG,"REGISTERED")
-        val api = BFClient(requireContext()).getClient().create(BFApi::class.java)
+        val api = BFClient(requireActivity()).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.register(userDetail.user.uniqueId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 userStorage.user_detail = userDetail
@@ -140,6 +140,12 @@ class LoginFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         compositeDisposable?.clear()
+        removeWebView()
+    }
+
+    fun removeWebView()
+    {
+        webview.destroy();
     }
 
 }

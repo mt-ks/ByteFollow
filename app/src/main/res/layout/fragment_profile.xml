@@ -5,11 +5,229 @@
     android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:background="@drawable/avatar_bg"
         android:id="@+id/userAvatar"
-        android:layout_width="65dp"
-        android:layout_height="65dp" />
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
 
+    <TextView
+        android:layout_marginTop="8dp"
+        android:text=" @username"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:padding="15dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:text="10"
+                android:fontFamily="sans-serif-black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textAlignment="center"
+                android:text="Takip Ediliyor"
+                android:textSize="11sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:padding="15dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:text="7"
+                android:fontFamily="sans-serif-black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textAlignment="center"
+                android:text="Takipçiler"
+                android:textSize="11sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:padding="15dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <TextView
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:text="42"
+                android:fontFamily="sans-serif-black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textAlignment="center"
+                android:text="Beğeniler"
+                android:textSize="11sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_marginHorizontal="25dp"
+        android:layout_width="match_parent"
+        android:backgroundTint="@color/black"
+        android:text="Jeton Kazan"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_marginHorizontal="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/card_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="25dp"
+            android:paddingVertical="15dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/ic_shopping"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="Siparişlerim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/card_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="25dp"
+            android:paddingVertical="15dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/ic_growth"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="Yeni Sipariş"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginHorizontal="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/card_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="25dp"
+            android:paddingVertical="15dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/ic_promotion"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="Promosyo Kodu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/card_bg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="25dp"
+            android:paddingVertical="15dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:src="@drawable/ic_references"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:textAlignment="center"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                android:textColor="@color/black"
+                android:text="Referanslarım"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>
