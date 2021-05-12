@@ -13,6 +13,8 @@ import androidx.fragment.app.activityViewModels
 import com.fastfollow.bytefollow.databinding.FragmentLoginBinding
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
 import com.fastfollow.bytefollow.model.UserInfo
+import com.fastfollow.bytefollow.service.BFApi
+import com.fastfollow.bytefollow.service.BFClient
 import com.fastfollow.bytefollow.service.TKApi
 import com.fastfollow.bytefollow.service.TKClient
 import com.fastfollow.bytefollow.storage.UserStorage
@@ -52,13 +54,9 @@ class LoginFragment : Fragment() {
         webview.webViewClient  = object :  WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-
-                CookieManager.getInstance()
-                    .getCookie("https://www.tiktok.com/")
-                    ?.let {
+                CookieManager.getInstance().getCookie("https://www.tiktok.com/")?.let {
                         checkAuthenticated(it)
-                    }
-
+                }
             }
         }
     }
@@ -74,7 +72,7 @@ class LoginFragment : Fragment() {
                     getUserInfo(it.data.username, cookieString)
                 }
             },{
-
+                this.errorHandler(it)
             }))
 
     }
@@ -97,13 +95,24 @@ class LoginFragment : Fragment() {
                 }
 
             },{
-
+                this.errorHandler(it)
             }))
     }
 
     private fun registerDevice(userInfo : UserInfo)
     {
-        activity?.finish()
+        val api = BFClient(requireContext()).getClient().create(BFApi::class.java)
+        compositeDisposable?.add(api.register(userInfo.uniqueId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+
+            },{
+                this.errorHandler(it)
+            }))
+    }
+
+    private fun errorHandler(it : Throwable)
+    {
+
     }
 
     override fun onDestroyView() {

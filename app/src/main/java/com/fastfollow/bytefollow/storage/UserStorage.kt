@@ -1,9 +1,12 @@
 package com.fastfollow.bytefollow.storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.fastfollow.bytefollow.model.UserInfo
 import com.google.gson.Gson
+import android.provider.Settings
+import java.util.*
 
 class UserStorage(var context: Context) {
 
@@ -25,6 +28,18 @@ class UserStorage(var context: Context) {
     var user_info : UserInfo
         get() { val info = sharedPreferences.getString("user_info","{}"); return Gson().fromJson(info,UserInfo::class.java) }
         set(value) { sharedPreferences.edit().putString("user_info",Gson().toJson(value)).apply() }
+
+    var device_id : String
+        @SuppressLint("HardwareIds")
+        get() { return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID) }
+        set(value) {}
+
+    val country
+        get() = Locale.getDefault().country;
+
+    val language
+        get() = Locale.getDefault().language;
+
 
     fun clearDB()
     {
