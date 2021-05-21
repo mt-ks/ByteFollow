@@ -7,6 +7,10 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.fastfollow.bytefollow.databinding.ActivityAppBinding
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
@@ -25,6 +29,9 @@ class AppActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
         initClient()
+
+        val navHostFragment : NavHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
+        NavigationUI.setupWithNavController(binding.bottomNavigationView,navHostFragment.navController)
     }
 
     private fun initClient()
