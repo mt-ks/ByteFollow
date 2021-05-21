@@ -24,11 +24,11 @@ class BFClient(private val context: Context) {
         httpClient.interceptors().add(Interceptor { chain ->
             val request = chain.request().newBuilder()
                 .addHeader("Accept", "application/json")
-                .addHeader("device_id", userStorage.device_id)
+                .addHeader("device_id", userStorage.deviceId)
                 .addHeader("device_level", Build.VERSION.RELEASE)
                 .addHeader("app_version", BuildConfig.VERSION_CODE.toString())
                 .addHeader("device_name", Build.BRAND + " - " + Build.MODEL)
-                .addHeader("ig_id", userStorage.user_id)
+                .addHeader("ig_id", userStorage.userId)
                 .addHeader("accept-language", userStorage.language)
                 .addHeader("locale-country", userStorage.country)
             chain.proceed(request.build())

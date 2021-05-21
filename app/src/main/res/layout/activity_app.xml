@@ -60,6 +60,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp" />
                 <TextView
+                    android:id="@+id/clientCredit"
                     android:textAlignment="center"
                     android:paddingLeft="5dp"
                     android:textColor="@color/black"

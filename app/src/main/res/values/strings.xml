@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ByteFollow</string>
+    <string name="_0">0</string>
+    <string name="following">Takip Ediliyor</string>
+    <string name="followers">Takipçiler</string>
+    <string name="likes">Beğeniler</string>
+    <string name="three_dot">...</string>
+    <string name="earn_coin">Jeton Kazan</string>
+    <string name="my_orders">Siparişlerim</string>
+    <string name="new_order">Yeni Sipariş</string>
+    <string name="promotional_code">Promosyon Kodu</string>
+    <string name="my_references">Referanslarım</string>
 </resources>

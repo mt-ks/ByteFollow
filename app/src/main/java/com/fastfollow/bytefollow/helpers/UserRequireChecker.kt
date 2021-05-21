@@ -1,5 +1,6 @@
 package com.fastfollow.bytefollow.helpers
 
+import android.util.Log
 import com.fastfollow.bytefollow.model.UserDetail
 import com.fastfollow.bytefollow.model.UserInfo
 import com.google.gson.Gson
@@ -24,6 +25,7 @@ class UserRequireChecker(private val responseBody: ResponseBody) {
             if(JsonFieldChecker("props>pageProps>userInfo>user",jsonData).check()){
                 val jsonDataInfo = jsonData.getJSONObject("props").getJSONObject("pageProps").getJSONObject("userInfo");
                 userDetail = Gson().fromJson(jsonDataInfo.toString(),UserDetail::class.java)
+                Log.d("USERCHECK",jsonDataInfo.toString())
                 return true;
             }
             return false;
