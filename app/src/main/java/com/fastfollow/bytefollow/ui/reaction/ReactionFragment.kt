@@ -67,13 +67,9 @@ class ReactionFragment : Fragment() {
 
     }
 
-    fun firstOrder() : OrderModel?{
-        val received_orders = userStorage.received_orders;
-        if (received_orders.size > 0)
-        {
-            return received_orders[0]
-        }
-        return null
+    private fun previousCheck()
+    {
+
     }
 
     private fun receiveOrders()
