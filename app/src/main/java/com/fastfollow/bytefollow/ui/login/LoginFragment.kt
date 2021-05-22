@@ -3,6 +3,7 @@ package com.fastfollow.bytefollow.ui.login
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var userStorage : UserStorage
     private lateinit var loadingDialog : LoadingDialog
     private lateinit var webView : WebView
+    private val TAG = "LoginFragment"
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -105,6 +107,7 @@ class LoginFragment : Fragment() {
 
     private fun registerDevice(userDetail : UserDetail, cookieString: String)
     {
+        userStorage.userId = userDetail.user.id
         val api = BFClient(requireActivity()).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.register(userDetail.user.uniqueId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -120,7 +123,6 @@ class LoginFragment : Fragment() {
                 activity?.finish()
             },{
                 this.errorHandler(it)
-
             }))
     }
 

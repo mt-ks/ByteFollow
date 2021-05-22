@@ -2,6 +2,7 @@ package com.fastfollow.bytefollow.service
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import com.fastfollow.bytefollow.BuildConfig
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.google.gson.GsonBuilder
@@ -15,12 +16,12 @@ import java.util.concurrent.TimeUnit
 class BFClient(private val context: Context) {
     private val BASE_URL = "http://192.168.3.10:8000/api/"
     private var userStorage: UserStorage = UserStorage(context)
-
+    private val TAG = "BFClient"
     fun getClient() : Retrofit {
         val httpClient = OkHttpClient.Builder()
         httpClient.readTimeout(60,TimeUnit.SECONDS)
         val gson = GsonBuilder().setLenient().create()
-
+        val userID = userStorage.userId
         httpClient.interceptors().add(Interceptor { chain ->
             val request = chain.request().newBuilder()
                 .addHeader("Accept", "application/json")
@@ -28,7 +29,7 @@ class BFClient(private val context: Context) {
                 .addHeader("device_level", Build.VERSION.RELEASE)
                 .addHeader("app_version", BuildConfig.VERSION_CODE.toString())
                 .addHeader("device_name", Build.BRAND + " - " + Build.MODEL)
-                .addHeader("ig_id", userStorage.userId)
+                .addHeader("ig_id", userID)
                 .addHeader("accept-language", userStorage.language)
                 .addHeader("locale-country", userStorage.country)
             chain.proceed(request.build())

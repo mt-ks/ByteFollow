@@ -7,8 +7,11 @@ import com.fastfollow.bytefollow.model.UserInfo
 import com.google.gson.Gson
 import android.provider.Settings
 import com.fastfollow.bytefollow.model.MeResponse
+import com.fastfollow.bytefollow.model.OrderModel
 import com.fastfollow.bytefollow.model.UserDetail
+import com.google.gson.reflect.TypeToken
 import java.util.*
+import kotlin.collections.ArrayList
 
 class UserStorage(var context: Context) {
 
@@ -50,6 +53,17 @@ class UserStorage(var context: Context) {
         get() { return sharedPreferences.getInt("client_credit",0) }
         set(value) { sharedPreferences.edit().putInt("client_credit",value).apply() }
 
+    var received_orders : ArrayList<OrderModel>
+        get() {
+            val orders = sharedPreferences.getString("received_orders","");
+            val typeToken = object : TypeToken<List<OrderModel>>(){}.type
+            return Gson().fromJson(orders,typeToken)
+        }
+        set(value) {
+            val json : String = Gson().toJson(value)
+            sharedPreferences.edit().putString("received_orders",json).apply()
+        }
+
     fun clearDB()
     {
         sharedPreferences.edit().remove("username").apply()
@@ -57,6 +71,18 @@ class UserStorage(var context: Context) {
         sharedPreferences.edit().remove("cookie").apply()
         sharedPreferences.edit().remove("user_info").apply()
     }
+
+    /*
+            val yourArrayList: ArrayList<OrderModel>
+        val json = sharedPreferences.getString("order_list", "")
+
+        yourArrayList = when {
+            json.isNullOrEmpty() -> ArrayList()
+            else -> Gson().fromJson(json, object : TypeToken<List<OrderModel>>() {}.type)
+        }
+
+        return yourArrayList
+ */
 
 
 
