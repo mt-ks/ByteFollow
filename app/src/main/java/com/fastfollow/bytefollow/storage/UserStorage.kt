@@ -55,7 +55,7 @@ class UserStorage(var context: Context) {
 
     var received_orders : ArrayList<OrderModel>
         get() {
-            val orders = sharedPreferences.getString("received_orders","");
+            val orders = sharedPreferences.getString("received_orders","[]");
             val typeToken = object : TypeToken<List<OrderModel>>(){}.type
             return Gson().fromJson(orders,typeToken)
         }

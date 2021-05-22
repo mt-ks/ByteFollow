@@ -12,4 +12,7 @@ interface TKApi {
 
     @GET("@{username}")
     fun getUserInfo(@Path("username") username : String) : Observable<ResponseBody>
+
+    @GET("@{username}/video/{videoID}")
+    fun getVideoInfo(@Path("username") username : String, @Path("videoID") videoID : String) : Observable<ResponseBody>
 }

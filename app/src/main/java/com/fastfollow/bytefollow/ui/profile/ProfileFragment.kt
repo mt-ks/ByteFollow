@@ -2,6 +2,7 @@ package com.fastfollow.bytefollow.ui.profile
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,8 @@ class ProfileFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        println(userStorage.received_orders.size)
 
         viewModel.userDetail.observe(viewLifecycleOwner,{
             try{

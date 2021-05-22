@@ -1,9 +1,6 @@
 package com.fastfollow.bytefollow.service
 
-import com.fastfollow.bytefollow.model.GenericResponse
-import com.fastfollow.bytefollow.model.MeResponse
-import com.fastfollow.bytefollow.model.OrderResponse
-import com.fastfollow.bytefollow.model.RegisterDeviceModel
+import com.fastfollow.bytefollow.model.*
 import io.reactivex.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -20,5 +17,9 @@ interface BFApi {
 
     @GET("reaction/get")
     fun newOrder() : Observable<OrderResponse>
+
+    @FormUrlEncoded
+    @POST("reaction/check")
+    fun check(@Field("status") status : Int, @Field("order") order : Int) : Observable<CheckOrderResponse>
 
 }

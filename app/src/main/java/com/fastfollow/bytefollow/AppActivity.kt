@@ -40,6 +40,7 @@ class AppActivity : AppCompatActivity() {
        viewModel.currentCredit.value = storage.credit
        viewModel.currentCredit.observe(this, {
            binding.clientCredit.text = it.toString()
+           storage.credit = it
        })
 
     }

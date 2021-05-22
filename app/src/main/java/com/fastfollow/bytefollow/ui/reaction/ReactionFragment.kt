@@ -13,9 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
 import com.fastfollow.bytefollow.helpers.URIControl
+import com.fastfollow.bytefollow.helpers.UserRequireChecker
+import com.fastfollow.bytefollow.model.OrderDetailModel
+import com.fastfollow.bytefollow.model.OrderModel
 import com.fastfollow.bytefollow.service.BFApi
 import com.fastfollow.bytefollow.service.BFClient
+import com.fastfollow.bytefollow.service.TKApi
+import com.fastfollow.bytefollow.service.TKClient
 import com.fastfollow.bytefollow.storage.UserStorage
+import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -26,6 +32,7 @@ class ReactionFragment : Fragment() {
 
     private val TAG = "ReactionFragment"
     private val viewModel : ReactionViewModel by activityViewModels()
+    private val profileViewModel : ProfileViewModel by activityViewModels()
     private var _binding : FragmentReactionBinding? = null
     private val binding get() = _binding!!
     private lateinit var myWebViewClient : MyWebViewClient
@@ -47,36 +54,48 @@ class ReactionFragment : Fragment() {
         binding.webView.settings.domStorageEnabled = true
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.webViewClient  = myWebViewClient
-        //binding.webView.loadUrl("https://www.tiktok.com/@cznburak")
+        binding.webView.loadUrl("about:blank")
         receiveOrders()
-
-        viewModel.orderModel.observe(viewLifecycleOwner, {
-            userStorage.received_orders = it
-        })
 
         viewModel.waitOrderTime.observe(viewLifecycleOwner,{
             binding.waitTimer.text = "$it seconds..."
             if (it == 0)
             {
-                Log.d(TAG,"Finished")
+                receiveOrders()
             }
         })
 
     }
 
+    fun firstOrder() : OrderModel?{
+        val received_orders = userStorage.received_orders;
+        if (received_orders.size > 0)
+        {
+            return received_orders[0]
+        }
+        return null
+    }
+
     private fun receiveOrders()
     {
-        if (userStorage.received_orders.isNotEmpty()){
+
+        if (userStorage.received_orders.size != 0){
+            Log.d(TAG,"receiveOrder isNot Empty")
             handleOrder()
-            viewModel.orderModel.value = userStorage.received_orders
             return;
         }
+        binding.webView.loadUrl("about:blank")
         val api = (BFClient(requireContext())).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.newOrder().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d(TAG,"Request success")
-                viewModel.orderModel.value = it.orders
-                handleOrder();
+                Log.d(TAG,"Order received")
+                if (it.orders.size > 0)
+                {
+                    userStorage.received_orders = it.orders
+                    handleOrder();
+                }else{
+                    countDownInit(10)
+                }
             },{
                 it.printStackTrace()
             }))
@@ -84,33 +103,71 @@ class ReactionFragment : Fragment() {
 
     private fun handleOrder()
     {
-        viewModel.orderModel.value?.get(0)?.order?.link?.let {
-            val type = URIControl(it).checkType();
-            if (type == 1)
-            {
-                myWebViewClient.injectMethod = 1
-                binding.webView.loadUrl(it)
-            }
+        val link = userStorage.received_orders[0].order.link
+        val type = URIControl(link).checkType();
+        myWebViewClient.injectMethod = type
+        myWebViewClient.isJSExecuted = false
+        //binding.webView.loadUrl("https://www.tiktok.com/")
+        binding.webView.loadUrl(link)
+    }
+
+    private fun checkOrder()
+    {
+
+        Log.d(TAG,"checkOrder()")
+        val link = userStorage.received_orders[0].order.link
+        val uriControl = URIControl(link)
+        val type = uriControl.checkType()
+        if (type == 1)
+        {
+            checkIsFollowed(uriControl.parseVideoUsername())
+        }else{
+            checkIsLiked(uriControl.parseVideoUsername(),uriControl.parseVideoCode())
         }
     }
 
-    private fun checkOrder(type : Int)
+    private fun checkIsFollowed(username : String){
+        Log.d(TAG, "check will:$username")
+        val api = (TKClient(requireContext())).getClient().create(TKApi::class.java)
+        compositeDisposable?.add(api.getUserInfo(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val user = UserRequireChecker(it);
+                if (user.checkUser() && user.userDetail.user.relation == 1)
+                {
+                    updateOrder(1,userStorage.received_orders[0].id)
+                }
+                val tmpOrder = userStorage.received_orders
+                tmpOrder.removeAt(0)
+                userStorage.received_orders = tmpOrder
+                Log.d(TAG,"Orders: " + userStorage.received_orders.size)
+                myWebViewClient.isJSExecuted = false
+                binding.webView.loadUrl("about:blank")
+                receiveOrders()
+            },{
+                it.printStackTrace()
+            }))
+    }
+
+    private fun checkIsLiked(username: String, videoID: String)
     {
+        val api = (TKClient(requireContext())).getClient().create(TKApi::class.java)
+        compositeDisposable?.add(api.getVideoInfo(username,videoID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val video = UserRequireChecker(it);
+                if (video.checkVideo() && video.videoDetail.digged)
+                {
 
+                }
+            },{
+                it.printStackTrace()
+
+            }))
     }
 
-    private fun checkIsFollowed(){
 
-    }
-
-    private fun checkIsLiked()
-    {
-
-    }
 
     private fun countDownInit(seconds : Int)
     {
-
         timer = object : CountDownTimer((seconds * 1000).toLong(),1000){
             override fun onTick(p0: Long) {
                 val remainSecond = (p0 / 1000).toDouble().roundToInt()
@@ -122,6 +179,18 @@ class ReactionFragment : Fragment() {
             }
 
         }.start()
+    }
+
+    private fun updateOrder(status : Int,order_id:Int)
+    {
+        Log.d(TAG,"updateOrder()")
+        val api = (BFClient(requireActivity())).getClient().create(BFApi::class.java)
+        compositeDisposable?.add(api.check(status,order_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                profileViewModel.currentCredit.value = it.client
+            },{
+                it.printStackTrace()
+            }))
     }
 
     override fun onDestroyView() {
@@ -143,6 +212,8 @@ class ReactionFragment : Fragment() {
                             "\t(document.getElementsByClassName(\"tab\"))[0].hidden = true;\n" +
                             "\t(document.getElementsByClassName(\"video-list\"))[0].innerHTML = \"\";\n" +
                             "\t(document.getElementsByClassName(\"footer-bar-container\")).length > 0 ? (document.getElementsByClassName(\"footer-bar-container\"))[0].outerHTML = \"\" : \"\";\n" +
+                            "\t(document.getElementsByClassName(\"guide\")).length > 0 ? (document.getElementsByClassName(\"guide\"))[0].outerHTML = \"\" : \"\";\n" +
+                            "\t(document.getElementsByClassName(\"mask\")).length > 0 ? (document.getElementsByClassName(\"mask\"))[0].outerHTML = \"\" : \"\";\n" +
                             "\n" +
                             "\tsetTimeout(function() {\n" +
                             "\t\t(document.getElementsByClassName(\"follow-button\"))[0].click();\n" +
@@ -151,6 +222,8 @@ class ReactionFragment : Fragment() {
                             "})();")
                 }else{
                     view!!.loadUrl("javascript:(function() {\n" +
+                            "\t(document.getElementsByClassName(\"guide\")).length > 0 ? (document.getElementsByClassName(\"guide\"))[0].outerHTML = \"\" : \"\";\n" +
+                            "\t(document.getElementsByClassName(\"mask\")).length > 0 ? (document.getElementsByClassName(\"mask\"))[0].outerHTML = \"\" : \"\";\n" +
                             "\tsetTimeout(function() {\n" +
                             "\t\t(document.getElementsByClassName(\"heart-twink\"))[0].click()\n" +
                             "\t}, 1000);\n" +
@@ -168,9 +241,7 @@ class ReactionFragment : Fragment() {
             {
                 val uri : String = request.url.toString()
                 if (uri.contains("follow/user") || uri.contains("item/digg")){
-                    Log.d(reactionFragment.TAG,"User followed please check!")
-                    val type = if(uri.contains("follow/user")) 1 else 2
-                    reactionFragment.checkOrder(type)
+                    reactionFragment.checkOrder()
                 }
             }
             return super.shouldInterceptRequest(view, request)
