@@ -67,10 +67,6 @@ class ReactionFragment : Fragment() {
 
     }
 
-    private fun previousCheck()
-    {
-
-    }
 
     private fun receiveOrders()
     {
@@ -84,7 +80,7 @@ class ReactionFragment : Fragment() {
         val api = (BFClient(requireContext())).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.newOrder().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d(TAG,"Order received")
+                Log.d(TAG,"Order received with request")
                 if (it.orders.size > 0)
                 {
                     userStorage.received_orders = it.orders
@@ -103,7 +99,6 @@ class ReactionFragment : Fragment() {
         val type = URIControl(link).checkType();
         myWebViewClient.injectMethod = type
         myWebViewClient.isJSExecuted = false
-        //binding.webView.loadUrl("https://www.tiktok.com/")
         binding.webView.loadUrl(link)
     }
 
@@ -131,14 +126,16 @@ class ReactionFragment : Fragment() {
                 if (user.checkUser() && user.userDetail.user.relation == 1)
                 {
                     updateOrder(1,userStorage.received_orders[0].id)
+                }else{
+                    updateOrder(2,userStorage.received_orders[0].id)
                 }
+                Log.d(TAG,"follow relation: ${user.userDetail.user.relation}")
                 val tmpOrder = userStorage.received_orders
                 tmpOrder.removeAt(0)
                 userStorage.received_orders = tmpOrder
-                Log.d(TAG,"Orders: " + userStorage.received_orders.size)
+                Log.d(TAG,"Orders remains: " + userStorage.received_orders.size)
                 myWebViewClient.isJSExecuted = false
                 binding.webView.loadUrl("about:blank")
-                receiveOrders()
             },{
                 it.printStackTrace()
             }))
@@ -167,11 +164,14 @@ class ReactionFragment : Fragment() {
         timer = object : CountDownTimer((seconds * 1000).toLong(),1000){
             override fun onTick(p0: Long) {
                 val remainSecond = (p0 / 1000).toDouble().roundToInt()
+                Log.d(TAG,"remains" + remainSecond)
                 if (remainSecond != 0) viewModel.waitOrderTime.value = remainSecond
             }
 
             override fun onFinish() {
+                Log.d(TAG,"onFinish timer")
                 viewModel.waitOrderTime.value = 0
+                timer?.cancel()
             }
 
         }.start()
@@ -184,6 +184,7 @@ class ReactionFragment : Fragment() {
         compositeDisposable?.add(api.check(status,order_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 profileViewModel.currentCredit.value = it.client
+                receiveOrders()
             },{
                 it.printStackTrace()
             }))
