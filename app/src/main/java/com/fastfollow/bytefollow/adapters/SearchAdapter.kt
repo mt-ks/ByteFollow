@@ -7,22 +7,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
+import com.fastfollow.bytefollow.dialogs.NewOrderDialog
 import com.fastfollow.bytefollow.model.UserDetail
 import com.fastfollow.bytefollow.model.VideoDetail
+import com.fastfollow.bytefollow.ui.search.SearchFragment
 import de.hdodenhof.circleimageview.CircleImageView
 
-class SearchAdapter(var context:Context, var list : List<VideoDetail>,var userDetail: UserDetail)
+class SearchAdapter(
+    var context:Context, var list: List<VideoDetail>,
+    var userDetail: UserDetail,
+    var onVideoClickListener: OnVideoClickListener
+)
     : RecyclerView.Adapter<BaseViewHolder<*>>()
 {
+
+    interface OnVideoClickListener{
+        public fun onVideoClick(videoDetail: VideoDetail)
+    }
+
     companion object {
         const val VIEW_TYPE_PROFILE = 1
         const val VIEW_TYPE_MEDIAS  = 2
     }
+
 
     override fun getItemCount(): Int {
         return list.size + 1;
@@ -35,7 +48,8 @@ class SearchAdapter(var context:Context, var list : List<VideoDetail>,var userDe
             )
         }
         return VideoViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.rc_search_video_item, parent, false)
+            LayoutInflater.from(context).inflate(R.layout.rc_search_video_item, parent, false),
+            onVideoClickListener
         )
     }
 
@@ -55,12 +69,20 @@ class SearchAdapter(var context:Context, var list : List<VideoDetail>,var userDe
         }
     }
 
-    private inner class VideoViewHolder(itemView: View) : BaseViewHolder<VideoDetail>(itemView) {
+    private inner class VideoViewHolder(itemView: View, val onVideoClickListener: OnVideoClickListener) : View.OnClickListener, BaseViewHolder<VideoDetail>(itemView) {
         val image : ImageView = itemView.findViewById(R.id.client_media)
         val likeCount : TextView = itemView.findViewById(R.id.likeCount)
+        val videoField : LinearLayout = itemView.findViewById(R.id.videoField)
+
+
         override fun bind(item: VideoDetail) {
             Glide.with(itemView).load(item.video.cover).into(image)
             likeCount.text = item.stats.diggCount.toString()
+            videoField.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            onVideoClickListener.onVideoClick(list[absoluteAdapterPosition - 1])
         }
     }
 
