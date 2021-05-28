@@ -16,4 +16,16 @@ class ReactionViewModel : ViewModel() {
         MutableLiveData<Int>()
     }
 
+    val reactionDisplayUrl : MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    val reactionUsername : MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
+    val reactionStatus : MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
 }

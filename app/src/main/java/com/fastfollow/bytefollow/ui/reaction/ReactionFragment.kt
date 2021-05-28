@@ -1,5 +1,6 @@
 package com.fastfollow.bytefollow.ui.reaction
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -7,10 +8,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.webkit.*
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
 import com.fastfollow.bytefollow.helpers.URIControl
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
@@ -58,11 +61,22 @@ class ReactionFragment : Fragment() {
         receiveOrders()
 
         viewModel.waitOrderTime.observe(viewLifecycleOwner,{
-            binding.waitTimer.text = "$it seconds..."
+            binding.lastStatus.text = "Yeni sipariş yok, $it saniye bekleyin..."
             if (it == 0)
             {
                 receiveOrders()
             }
+        })
+
+        viewModel.reactionStatus.observe(viewLifecycleOwner,{
+            binding.reactionStatus.text = it
+        })
+
+        viewModel.reactionDisplayUrl.observe(viewLifecycleOwner,{
+            Glide.with(requireContext()).load(it).into(binding.userAvatar)
+        })
+        viewModel.reactionUsername.observe(viewLifecycleOwner,{
+            binding.usernameField.text = it
         })
 
     }
@@ -70,10 +84,10 @@ class ReactionFragment : Fragment() {
 
     private fun receiveOrders()
     {
-
+        binding.lastStatus.text = "Bütün siparişler kontrol ediliyor..."
         if (userStorage.received_orders.size != 0){
             Log.d(TAG,"receiveOrder isNot Empty")
-            handleOrder()
+            checkPreviousOrderState()
             return;
         }
         binding.webView.loadUrl("about:blank")
@@ -84,7 +98,7 @@ class ReactionFragment : Fragment() {
                 if (it.orders.size > 0)
                 {
                     userStorage.received_orders = it.orders
-                    handleOrder();
+                    checkPreviousOrderState()
                 }else{
                     countDownInit(10)
                 }
@@ -100,11 +114,19 @@ class ReactionFragment : Fragment() {
         myWebViewClient.injectMethod = type
         myWebViewClient.isJSExecuted = false
         binding.webView.loadUrl(link)
+        if(type == 1)
+        {
+            binding.lastStatus.text = "Kullanıcı takip ediliyor..."
+        }else{
+            binding.lastStatus.text = "Video beğeniliyor..."
+
+        }
     }
+
 
     private fun checkOrder()
     {
-
+        binding.lastStatus.text = "Tekrar kontrol ediliyor..."
         Log.d(TAG,"checkOrder()")
         val link = userStorage.received_orders[0].order.link
         val uriControl = URIControl(link)
@@ -117,6 +139,50 @@ class ReactionFragment : Fragment() {
         }
     }
 
+    private fun checkPreviousOrderState()
+    {
+        binding.lastStatus.text = "Sipariş kontrol ediliyor..."
+        binding.stateProgress.visibility = View.VISIBLE
+        binding.stateProgress.isIndeterminate = true
+
+        val link = userStorage.received_orders[0].order.link
+        val uriControl = URIControl(link)
+        val type = uriControl.checkType()
+        if(type == 1)
+        {
+            checkIsFollowedPrevious(uriControl.parseVideoUsername())
+        }else{
+            checkIsLikedPrevious(uriControl.parseVideoUsername(),uriControl.parseVideoCode())
+        }
+    }
+
+    private fun checkIsFollowedPrevious(username : String)
+    {
+        Log.d(TAG, "previous check:$username")
+        val api = (TKClient(requireContext())).getClient().create(TKApi::class.java)
+        compositeDisposable?.add(api.getUserInfo(username).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val user = UserRequireChecker(it);
+                if (user.checkUser())
+                {
+                    viewModel.reactionDisplayUrl.value = user.userDetail.user.avatarLarger
+                    viewModel.reactionUsername.value = user.userDetail.user.uniqueId
+                    if (user.userDetail.user.relation == 1)
+                    {
+                        updateOrder(4,userStorage.received_orders[0].id)
+                        removeFirstOrder()
+                    }else{
+                        handleOrder()
+                    }
+                }else{
+                    // no user err
+                }
+
+            },{
+                it.printStackTrace()
+            }))
+    }
+
     private fun checkIsFollowed(username : String){
         Log.d(TAG, "check will:$username")
         val api = (TKClient(requireContext())).getClient().create(TKApi::class.java)
@@ -125,19 +191,43 @@ class ReactionFragment : Fragment() {
                 val user = UserRequireChecker(it);
                 if (user.checkUser() && user.userDetail.user.relation == 1)
                 {
+                    viewModel.reactionStatus.value = "${user.userDetail.user.uniqueId} kullanıcısını takip ettin!"
                     updateOrder(1,userStorage.received_orders[0].id)
                 }else{
+                    viewModel.reactionStatus.value = "${user.userDetail.user.uniqueId} hesabını takip ederken bir sorun oluştu!"
                     updateOrder(2,userStorage.received_orders[0].id)
                 }
                 Log.d(TAG,"follow relation: ${user.userDetail.user.relation}")
-                val tmpOrder = userStorage.received_orders
-                tmpOrder.removeAt(0)
-                userStorage.received_orders = tmpOrder
-                Log.d(TAG,"Orders remains: " + userStorage.received_orders.size)
-                myWebViewClient.isJSExecuted = false
-                binding.webView.loadUrl("about:blank")
+                removeFirstOrder()
             },{
                 it.printStackTrace()
+            }))
+    }
+
+
+    private fun checkIsLikedPrevious(username: String, videoID: String)
+    {
+        val api = (TKClient(requireContext())).getClient().create(TKApi::class.java)
+        compositeDisposable?.add(api.getVideoInfo(username,videoID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val video = UserRequireChecker(it);
+                if (video.checkVideo())
+                {
+                    viewModel.reactionDisplayUrl.value = video.videoDetail.video.cover
+                    viewModel.reactionUsername.value = video.videoDetail.author.uniqueId
+                   if (video.videoDetail.digged)
+                   {
+                       updateOrder(4,userStorage.received_orders[0].id)
+                       removeFirstOrder()
+                   }else{
+                       handleOrder()
+                   }
+                }else{
+                    // no order err
+                }
+            },{
+                it.printStackTrace()
+
             }))
     }
 
@@ -149,8 +239,13 @@ class ReactionFragment : Fragment() {
                 val video = UserRequireChecker(it);
                 if (video.checkVideo() && video.videoDetail.digged)
                 {
-
+                    viewModel.reactionStatus.value = "${video.videoDetail.author.uniqueId} gönderisini beğendin!"
+                    updateOrder(1,userStorage.received_orders[0].id)
+                }else{
+                    viewModel.reactionStatus.value = "${video.videoDetail.author.uniqueId} gönderisini beğenirken bir sorun oluştu!"
+                    updateOrder(2,userStorage.received_orders[0].id)
                 }
+                removeFirstOrder()
             },{
                 it.printStackTrace()
 
@@ -161,10 +256,16 @@ class ReactionFragment : Fragment() {
 
     private fun countDownInit(seconds : Int)
     {
+        binding.lastStatus.visibility = View.VISIBLE
+        binding.stateProgress.visibility = View.VISIBLE
+        binding.stateProgress.isIndeterminate = false
+        val animator = ObjectAnimator.ofInt(binding.stateProgress,"progress",0,100)
+        animator.duration = (seconds * 1000).toLong()
+        animator.start()
         timer = object : CountDownTimer((seconds * 1000).toLong(),1000){
             override fun onTick(p0: Long) {
                 val remainSecond = (p0 / 1000).toDouble().roundToInt()
-                Log.d(TAG,"remains" + remainSecond)
+                Log.d(TAG, "remains$remainSecond")
                 if (remainSecond != 0) viewModel.waitOrderTime.value = remainSecond
             }
 
@@ -175,6 +276,16 @@ class ReactionFragment : Fragment() {
             }
 
         }.start()
+    }
+
+    private fun removeFirstOrder()
+    {
+        val tmpOrder = userStorage.received_orders
+        tmpOrder.removeAt(0)
+        userStorage.received_orders = tmpOrder
+        Log.d(TAG,"Orders remains: " + userStorage.received_orders.size)
+        myWebViewClient.isJSExecuted = false
+        binding.webView.loadUrl("about:blank")
     }
 
     private fun updateOrder(status : Int,order_id:Int)
@@ -192,6 +303,7 @@ class ReactionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.webView.destroy()
         timer?.cancel()
         compositeDisposable?.clear()
     }
@@ -217,6 +329,7 @@ class ReactionFragment : Fragment() {
                             "\t}, 1000);\n" +
                             "\n" +
                             "})();")
+
                 }else{
                     view!!.loadUrl("javascript:(function() {\n" +
                             "\t(document.getElementsByClassName(\"guide\")).length > 0 ? (document.getElementsByClassName(\"guide\"))[0].outerHTML = \"\" : \"\";\n" +

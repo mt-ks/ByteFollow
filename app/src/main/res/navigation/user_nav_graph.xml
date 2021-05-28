@@ -13,12 +13,20 @@
         <action
             android:id="@+id/action_profileFragment_to_reactionFragment"
             app:destination="@id/reactionFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         tools:layout="@layout/fragment_reaction"
         android:id="@+id/reactionFragment"
         android:name="com.fastfollow.bytefollow.ui.reaction.ReactionFragment"
         android:label="ReactionFragment" />
+    <fragment
+        tools:layout="@layout/fragment_search"
+        android:id="@+id/searchFragment"
+        android:name="com.fastfollow.bytefollow.ui.search.SearchFragment"
+        android:label="SearchFragment" />
 
 
 </navigation>

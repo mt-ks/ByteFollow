@@ -10,4 +10,5 @@
     <string name="new_order">Yeni Sipariş</string>
     <string name="promotional_code">Promosyon Kodu</string>
     <string name="my_references">Referanslarım</string>
+    <string name="send_followers">Takipçi Gönder</string>
 </resources>

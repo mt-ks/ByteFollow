@@ -9,10 +9,10 @@
         android:id="@+id/reactionFragment"
         android:title="Earn Credit"
         android:icon="@drawable/ic_rocket"/>
-<!--    <item-->
-<!--        android:id="@+id/search"-->
-<!--        android:title="Search"-->
-<!--        android:icon="@drawable/ic_search"/>-->
+    <item
+        android:id="@+id/searchFragment"
+        android:title="Search"
+        android:icon="@drawable/ic_search"/>
 <!--    <item-->
 <!--        android:id="@+id/settings"-->
 <!--        android:title="Settings"-->

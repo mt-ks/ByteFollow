@@ -42,8 +42,6 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        println(userStorage.received_orders.size)
-
         viewModel.userDetail.observe(viewLifecycleOwner,{
             try{
                 binding.usernameField.text = it.user.uniqueId
@@ -59,6 +57,7 @@ class ProfileFragment : Fragment() {
             getProfileDetail()
         }
     }
+
 
     private fun getMeInfo()
     {
