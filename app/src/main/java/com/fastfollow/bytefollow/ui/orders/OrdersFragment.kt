@@ -32,7 +32,7 @@ class OrdersFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentOrdersBinding.inflate(inflater,container,false)
         compositeDisposable = CompositeDisposable()
         loadingDialog = LoadingDialog(requireActivity())
@@ -53,6 +53,10 @@ class OrdersFragment : Fragment() {
 
     private fun initRecycler(data : List<MyOrderDetail>)
     {
+
+        binding.orderRecycler.visibility    = if(data.isNotEmpty()) View.VISIBLE else View.GONE
+        binding.emptyOrderLayout.visibility = if(data.isNotEmpty()) View.GONE else View.VISIBLE
+
         val adapter = MyOrdersAdapter(requireContext(),data)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
