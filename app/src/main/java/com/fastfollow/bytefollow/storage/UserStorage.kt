@@ -70,19 +70,10 @@ class UserStorage(var context: Context) {
         sharedPreferences.edit().remove("user_id").apply()
         sharedPreferences.edit().remove("cookie").apply()
         sharedPreferences.edit().remove("user_info").apply()
+        sharedPreferences.edit().remove("received_orders").apply()
+        sharedPreferences.edit().remove("client_credit").apply()
+        sharedPreferences.edit().remove("me_info").apply()
     }
-
-    /*
-            val yourArrayList: ArrayList<OrderModel>
-        val json = sharedPreferences.getString("order_list", "")
-
-        yourArrayList = when {
-            json.isNullOrEmpty() -> ArrayList()
-            else -> Gson().fromJson(json, object : TypeToken<List<OrderModel>>() {}.type)
-        }
-
-        return yourArrayList
- */
 
 
 

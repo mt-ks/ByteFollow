@@ -103,6 +103,7 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/sendFollowers"
             android:layout_marginHorizontal="25dp"
             android:layout_width="match_parent"
             android:backgroundTint="@color/black"

@@ -6,19 +6,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.databinding.FragmentProfileBinding
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
-import com.fastfollow.bytefollow.service.BFApi
-import com.fastfollow.bytefollow.service.BFClient
-import com.fastfollow.bytefollow.service.TKApi
-import com.fastfollow.bytefollow.service.TKClient
+import com.fastfollow.bytefollow.model.OembedResponse
+import com.fastfollow.bytefollow.service.*
 import com.fastfollow.bytefollow.storage.UserStorage
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback;
+import retrofit2.Response
 
 class ProfileFragment : Fragment() {
     private val viewModel : ProfileViewModel by activityViewModels()
@@ -37,6 +40,7 @@ class ProfileFragment : Fragment() {
         userStorage = UserStorage(requireContext())
         return _binding!!.root
     }
+
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +74,8 @@ class ProfileFragment : Fragment() {
                 binding.swipeRefreshProfile.isRefreshing = false;
             },{
                 binding.swipeRefreshProfile.isRefreshing = false;
-                it.printStackTrace()
+                val error = (BFErrorHandler(requireActivity(),it))
+                Toast.makeText(requireContext(),error.message,Toast.LENGTH_SHORT).show()
             }))
     }
 

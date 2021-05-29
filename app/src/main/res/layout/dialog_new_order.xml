@@ -30,7 +30,7 @@
         android:layout_marginLeft="15dp"
         android:id="@+id/maximum"
         android:textSize="12sp"
-        android:text="Max: 0"
+        android:text="@string/max_0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -47,9 +47,10 @@
 
 
     <Button
+        android:id="@+id/addOrder"
         android:layout_marginVertical="10dp"
         android:textSize="12sp"
-        android:text="Sipariş Ver"
+        android:text="@string/add_new_order"
         android:layout_marginHorizontal="15dp"
         android:backgroundTint="@color/black"
         android:layout_width="match_parent"
@@ -71,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:id="@+id/actionType"
             android:textSize="12sp"
             android:text="@string/likes"
             android:layout_width="wrap_content"
@@ -90,7 +92,7 @@
         <TextView
             android:id="@+id/amountCoin"
             android:textSize="12sp"
-            android:text="0 coin"
+            android:text="@string/x_coin"
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingHorizontal="8dp"

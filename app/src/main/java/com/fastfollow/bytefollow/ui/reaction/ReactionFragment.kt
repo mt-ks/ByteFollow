@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
+import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
 import com.fastfollow.bytefollow.helpers.URIControl
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
@@ -28,12 +29,14 @@ import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.HttpException
 import java.util.*
 import kotlin.math.roundToInt
 
 class ReactionFragment : Fragment() {
 
     private val TAG = "ReactionFragment"
+    private val countDownSeconds = 10
     private val viewModel : ReactionViewModel by activityViewModels()
     private val profileViewModel : ProfileViewModel by activityViewModels()
     private var _binding : FragmentReactionBinding? = null
@@ -61,7 +64,7 @@ class ReactionFragment : Fragment() {
         receiveOrders()
 
         viewModel.waitOrderTime.observe(viewLifecycleOwner,{
-            binding.lastStatus.text = "Yeni sipariş yok, $it saniye bekleyin..."
+            binding.lastStatus.text = String.format(getString(R.string.no_new_order_wait_x_seconds),it.toString())
             if (it == 0)
             {
                 receiveOrders()
@@ -84,7 +87,7 @@ class ReactionFragment : Fragment() {
 
     private fun receiveOrders()
     {
-        binding.lastStatus.text = "Bütün siparişler kontrol ediliyor..."
+        binding.lastStatus.text = getString(R.string.all_orders_checking)
         if (userStorage.received_orders.size != 0){
             Log.d(TAG,"receiveOrder isNot Empty")
             checkPreviousOrderState()
@@ -100,10 +103,11 @@ class ReactionFragment : Fragment() {
                     userStorage.received_orders = it.orders
                     checkPreviousOrderState()
                 }else{
-                    countDownInit(10)
+                    countDownInit(countDownSeconds)
                 }
             },{
-                it.printStackTrace()
+                binding.lastStatus.text = getString(R.string.receive_order_error_msg)
+                countDownInit(countDownSeconds)
             }))
     }
 
@@ -116,9 +120,9 @@ class ReactionFragment : Fragment() {
         binding.webView.loadUrl(link)
         if(type == 1)
         {
-            binding.lastStatus.text = "Kullanıcı takip ediliyor..."
+            binding.lastStatus.text = getString(R.string.user_following)
         }else{
-            binding.lastStatus.text = "Video beğeniliyor..."
+            binding.lastStatus.text = getString(R.string.video_liking)
 
         }
     }
@@ -126,7 +130,7 @@ class ReactionFragment : Fragment() {
 
     private fun checkOrder()
     {
-        binding.lastStatus.text = "Tekrar kontrol ediliyor..."
+        binding.lastStatus.text = getString(R.string.again_checking)
         Log.d(TAG,"checkOrder()")
         val link = userStorage.received_orders[0].order.link
         val uriControl = URIControl(link)
@@ -141,7 +145,7 @@ class ReactionFragment : Fragment() {
 
     private fun checkPreviousOrderState()
     {
-        binding.lastStatus.text = "Sipariş kontrol ediliyor..."
+        binding.lastStatus.text = getString(R.string.order_checking)
         binding.stateProgress.visibility = View.VISIBLE
         binding.stateProgress.isIndeterminate = true
 
@@ -171,15 +175,18 @@ class ReactionFragment : Fragment() {
                     {
                         updateOrder(4,userStorage.received_orders[0].id)
                         removeFirstOrder()
+                    }else if(user.userDetail.user.privateAccount){
+                        updateOrder(2,userStorage.received_orders[0].id)
+                        removeFirstOrder()
                     }else{
                         handleOrder()
                     }
                 }else{
-                    // no user err
+                    updateBy404()
                 }
 
             },{
-                it.printStackTrace()
+                errorHandler(it)
             }))
     }
 
@@ -191,16 +198,15 @@ class ReactionFragment : Fragment() {
                 val user = UserRequireChecker(it);
                 if (user.checkUser() && user.userDetail.user.relation == 1)
                 {
-                    viewModel.reactionStatus.value = "${user.userDetail.user.uniqueId} kullanıcısını takip ettin!"
+                    viewModel.reactionStatus.value = String.format(getString(R.string.x_user_followed_success),user.userDetail.user.uniqueId)
                     updateOrder(1,userStorage.received_orders[0].id)
                 }else{
-                    viewModel.reactionStatus.value = "${user.userDetail.user.uniqueId} hesabını takip ederken bir sorun oluştu!"
+                    viewModel.reactionStatus.value = String.format(getString(R.string.x_user_followed_error),user.userDetail.user.uniqueId)
                     updateOrder(2,userStorage.received_orders[0].id)
                 }
-                Log.d(TAG,"follow relation: ${user.userDetail.user.relation}")
                 removeFirstOrder()
             },{
-                it.printStackTrace()
+                errorHandler(it)
             }))
     }
 
@@ -223,11 +229,10 @@ class ReactionFragment : Fragment() {
                        handleOrder()
                    }
                 }else{
-                    // no order err
+                    updateBy404()
                 }
             },{
-                it.printStackTrace()
-
+                errorHandler(it)
             }))
     }
 
@@ -239,16 +244,15 @@ class ReactionFragment : Fragment() {
                 val video = UserRequireChecker(it);
                 if (video.checkVideo() && video.videoDetail.digged)
                 {
-                    viewModel.reactionStatus.value = "${video.videoDetail.author.uniqueId} gönderisini beğendin!"
+                    viewModel.reactionStatus.value = String.format(getString(R.string.x_user_like_success),video.videoDetail.author.uniqueId)
                     updateOrder(1,userStorage.received_orders[0].id)
                 }else{
-                    viewModel.reactionStatus.value = "${video.videoDetail.author.uniqueId} gönderisini beğenirken bir sorun oluştu!"
+                    viewModel.reactionStatus.value = String.format(getString(R.string.x_user_like_error),video.videoDetail.author.uniqueId)
                     updateOrder(2,userStorage.received_orders[0].id)
                 }
                 removeFirstOrder()
             },{
-                it.printStackTrace()
-
+                errorHandler(it)
             }))
     }
 
@@ -288,6 +292,12 @@ class ReactionFragment : Fragment() {
         binding.webView.loadUrl("about:blank")
     }
 
+    private fun updateBy404()
+    {
+        updateOrder(2,userStorage.received_orders[0].id)
+        removeFirstOrder()
+    }
+
     private fun updateOrder(status : Int,order_id:Int)
     {
         Log.d(TAG,"updateOrder()")
@@ -297,9 +307,11 @@ class ReactionFragment : Fragment() {
                 profileViewModel.currentCredit.value = it.client
                 receiveOrders()
             },{
-                it.printStackTrace()
+                errorHandler(it)
             }))
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -357,4 +369,17 @@ class ReactionFragment : Fragment() {
             return super.shouldInterceptRequest(view, request)
         }
     }
+
+    private fun errorHandler(it : Throwable)
+    {
+        if (it is HttpException)
+        {
+            if (it.code() == 404)
+            {
+                updateBy404()
+            }
+        }
+        receiveOrders()
+    }
+
 }

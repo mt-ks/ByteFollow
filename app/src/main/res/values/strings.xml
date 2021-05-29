@@ -11,4 +11,41 @@
     <string name="promotional_code">Promosyon Kodu</string>
     <string name="my_references">Referanslarım</string>
     <string name="send_followers">Takipçi Gönder</string>
+
+    <string name="an_error_occurred">Bir hata oluştu!</string>
+    <string name="incorrect_link">Geçersiz link!</string>
+    <string name="user_not_fund">Kullanıcı bulunamadı.</string>
+    <string name="private_profile">Gizli hesaplara işlem yapamazsınız!</string>
+    <string name="post_not_found">Gönderi bulunamadı.</string>
+
+    <string name="maximum_x">Maximum: %s</string>
+    <string name="quantity_limit">Miktar en az 10 olmalıdır!</string>
+    <string name="youre_logout">Çıkış yaptınız.</string>
+    <string name="session_expired_desc">Oturumunuz sona erdi, lütfen yeniden giriş yapınız.</string>
+    <string name="ok">TAMAM</string>
+    <string name="update_app">Uygulamayı Güncelle</string>
+    <string name="update_app_desc">ByteFollow\'un yeni sürümü mevcut. Devam edebilmek için aşağıdaki bağlantıdan uygulamanızı güncelleyebilirsiniz.</string>
+    <string name="update">Güncelle</string>
+    <string name="max_0">Max: 0</string>
+    <string name="add_new_order">Sipariş Ver</string>
+    <string name="x_coin">0 coin</string>
+    <string name="login_with_tiktok">Login with tiktok</string>
+    <string name="login_description">By logging in you agree to the terms of use.</string>
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="search">Ara</string>
+    <string name="username_or_link">Kullanıcı adı veya link</string>
+
+    <string name="all_orders_checking">Bütün siparişler kontrol ediliyor…</string>
+    <string name="user_following">Kullanıcı takip ediliyor…</string>
+    <string name="video_liking">Video beğeniliyor…</string>
+    <string name="again_checking">Tekrar kontrol ediliyor…</string>
+    <string name="order_checking">Sipariş kontrol ediliyor…</string>
+    <string name="x_user_followed_success">%s kullanıcısını takip ettin!</string>
+    <string name="x_user_followed_error">%s kullanıcısını takip ederken sorun oluştu!</string>
+
+    <string name="x_user_like_success">%s kullanıcısının gönderisini beğendin!</string>
+    <string name="x_user_like_error">%s kullanıcısının gönderisini beğenirken bir sorun oluştu!</string>
+    <string name="no_new_order_wait_x_seconds">Yeni sipariş yok, %s saniye bekleyin…</string>
+    <string name="receive_order_error_msg">Siparişler listelenirken bir sorun oluştu…</string>
+
 </resources>

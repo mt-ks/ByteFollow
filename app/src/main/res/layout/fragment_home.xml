@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/black"
-        android:text="Login with tiktok"
+        android:text="@string/login_with_tiktok"
         />
 
 
@@ -37,14 +37,14 @@
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="By logging in you agree to the terms of use."
+        android:text="@string/login_description"
         />
 
     <TextView
         android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Terms of Use"
+        android:text="@string/terms_of_use"
          />
 
 

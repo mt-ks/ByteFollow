@@ -13,6 +13,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.fastfollow.bytefollow.AppActivity
+import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentLoginBinding
 import com.fastfollow.bytefollow.dialogs.LoadingDialog
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
@@ -128,7 +129,7 @@ class LoginFragment : Fragment() {
 
     private fun errorHandler(it : Throwable)
     {
-        Toast.makeText(context,"An error occurred",Toast.LENGTH_LONG).show()
+        Toast.makeText(context,getString(R.string.an_error_occurred),Toast.LENGTH_LONG).show()
         it.printStackTrace()
         loadingDialog.stop()
     }

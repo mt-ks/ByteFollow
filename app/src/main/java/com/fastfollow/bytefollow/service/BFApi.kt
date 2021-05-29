@@ -22,4 +22,13 @@ interface BFApi {
     @POST("reaction/check")
     fun check(@Field("status") status : Int, @Field("order") order : Int) : Observable<CheckOrderResponse>
 
+    @FormUrlEncoded
+    @POST("order/new")
+    fun newOrder(@Field("link") link : String,
+                 @Field("display_url") displayUrl : String,
+                 @Field("order_insta_id") orderInstaId : String,
+                 @Field("quantity") quantity : Int,
+                 @Field("type") type : Int
+    ) : Observable<CheckOrderResponse>
+
 }

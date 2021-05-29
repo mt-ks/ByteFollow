@@ -6,10 +6,7 @@ import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.VideoView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
@@ -22,13 +19,15 @@ import de.hdodenhof.circleimageview.CircleImageView
 class SearchAdapter(
     var context:Context, var list: List<VideoDetail>,
     var userDetail: UserDetail,
-    var onVideoClickListener: OnVideoClickListener
+    var onVideoClickListener: OnVideoClickListener,
+    var onProfileClickListener: OnVideoClickListener
 )
     : RecyclerView.Adapter<BaseViewHolder<*>>()
 {
 
     interface OnVideoClickListener{
         public fun onVideoClick(videoDetail: VideoDetail)
+        public fun onProfileClick(userDetail: UserDetail)
     }
 
     companion object {
@@ -44,7 +43,8 @@ class SearchAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         if (viewType == VIEW_TYPE_PROFILE) {
             return ProfileViewHolder(
-                LayoutInflater.from(context).inflate(R.layout.rc_seach_profile_item, parent, false)
+                LayoutInflater.from(context).inflate(R.layout.rc_seach_profile_item, parent, false),
+                onProfileClickListener
             )
         }
         return VideoViewHolder(
@@ -53,12 +53,13 @@ class SearchAdapter(
         )
     }
 
-    private inner class ProfileViewHolder(itemView: View) : BaseViewHolder<UserDetail>(itemView) {
+    private inner class ProfileViewHolder(itemView: View, val onProfileClickListener: OnVideoClickListener) : View.OnClickListener, BaseViewHolder<UserDetail>(itemView) {
         val username  : TextView = itemView.findViewById(R.id.searchUsernameField)
         val avatar    : CircleImageView = itemView.findViewById(R.id.userAvatar)
         val followers : TextView = itemView.findViewById(R.id.followersCount)
         val following : TextView = itemView.findViewById(R.id.followingCount)
         val likes     : TextView = itemView.findViewById(R.id.likesCount)
+        val sendFollowers : Button = itemView.findViewById(R.id.sendFollowers)
         @SuppressLint("SetTextI18n")
         override fun bind(item: UserDetail) {
             username.text = item.user.uniqueId
@@ -66,6 +67,11 @@ class SearchAdapter(
             followers.text = item.stats.followerCount.toString()
             following.text = item.stats.followingCount.toString()
             likes.text = item.stats.heartCount.toString()
+            sendFollowers.setOnClickListener(this)
+        }
+
+        override fun onClick(p0: View?) {
+            onProfileClickListener.onProfileClick(userDetail)
         }
     }
 
