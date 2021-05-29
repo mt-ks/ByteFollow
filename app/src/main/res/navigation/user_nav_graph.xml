@@ -16,7 +16,11 @@
         <action
             android:id="@+id/action_profileFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_ordersFragment"
+            app:destination="@id/ordersFragment" />
     </fragment>
+
     <fragment
         tools:layout="@layout/fragment_reaction"
         android:id="@+id/reactionFragment"
@@ -27,6 +31,11 @@
         android:id="@+id/searchFragment"
         android:name="com.fastfollow.bytefollow.ui.search.SearchFragment"
         android:label="SearchFragment" />
+    <fragment
+        tools:layout="@layout/fragment_orders"
+        android:id="@+id/ordersFragment"
+        android:name="com.fastfollow.bytefollow.ui.orders.OrdersFragment"
+        android:label="OrdersFragment" />
 
 
 </navigation>

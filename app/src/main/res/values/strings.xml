@@ -48,4 +48,8 @@
     <string name="no_new_order_wait_x_seconds">Yeni sipariş yok, %s saniye bekleyin…</string>
     <string name="receive_order_error_msg">Siparişler listelenirken bir sorun oluştu…</string>
 
+    <string name="order_completed">Tamamlandı</string>
+    <string name="order_in_progress">İşlemde</string>
+    <string name="order_canceled">İptal edildi</string>
+
 </resources>

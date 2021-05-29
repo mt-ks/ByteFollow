@@ -112,6 +112,7 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/earnCoinButton"
                 android:layout_marginHorizontal="25dp"
                 android:layout_width="match_parent"
                 android:backgroundTint="@color/black"
@@ -129,6 +130,7 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
+                    android:id="@+id/ordersArea"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_margin="10dp"
@@ -155,6 +157,7 @@
 
                 </LinearLayout>
                 <LinearLayout
+                    android:id="@+id/newOrderArea"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_margin="10dp"

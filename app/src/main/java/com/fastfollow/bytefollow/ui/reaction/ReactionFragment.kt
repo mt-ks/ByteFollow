@@ -4,22 +4,21 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import android.webkit.*
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
+import com.fastfollow.bytefollow.dialogs.LogoutDialog
 import com.fastfollow.bytefollow.helpers.URIControl
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
-import com.fastfollow.bytefollow.model.OrderDetailModel
-import com.fastfollow.bytefollow.model.OrderModel
 import com.fastfollow.bytefollow.service.BFApi
 import com.fastfollow.bytefollow.service.BFClient
 import com.fastfollow.bytefollow.service.TKApi
@@ -33,6 +32,7 @@ import retrofit2.HttpException
 import java.util.*
 import kotlin.math.roundToInt
 
+
 class ReactionFragment : Fragment() {
 
     private val TAG = "ReactionFragment"
@@ -45,6 +45,7 @@ class ReactionFragment : Fragment() {
     private var compositeDisposable : CompositeDisposable? = null
     private lateinit var userStorage: UserStorage
     private var timer : CountDownTimer? = null
+    private var delayTimer : CountDownTimer? = null;
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentReactionBinding.inflate(inflater,container,false)
@@ -61,7 +62,9 @@ class ReactionFragment : Fragment() {
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.webViewClient  = myWebViewClient
         binding.webView.loadUrl("about:blank")
-        receiveOrders()
+
+        if (viewModel.waitOrderTime.value == null) receiveOrders() else countDownInit(viewModel.waitOrderTime.value!!)
+
 
         viewModel.waitOrderTime.observe(viewLifecycleOwner,{
             binding.lastStatus.text = String.format(getString(R.string.no_new_order_wait_x_seconds),it.toString())
@@ -87,6 +90,16 @@ class ReactionFragment : Fragment() {
 
     private fun receiveOrders()
     {
+        val errorsCount = viewModel.actionErrorCount.value?:0
+        if(errorsCount > 15)
+        {
+            val logoutDialog = LogoutDialog(requireActivity())
+            logoutDialog.customTitle   = "Tiktok Limit!"
+            logoutDialog.customMessage = "Görünüşe göre bazı işlemleri yaparken hesabınız kısıtlandı! Kredi kazanmaya devam edebilmek için farklı bir hesapla giriş yapmayı deneyin."
+            logoutDialog.start()
+            return
+        }
+
         binding.lastStatus.text = getString(R.string.all_orders_checking)
         if (userStorage.received_orders.size != 0){
             Log.d(TAG,"receiveOrder isNot Empty")
@@ -130,8 +143,23 @@ class ReactionFragment : Fragment() {
 
     private fun checkOrder()
     {
-        binding.lastStatus.text = getString(R.string.again_checking)
-        Log.d(TAG,"checkOrder()")
+        Handler(Looper.getMainLooper()).post(Runnable {
+            delayTimer = object : CountDownTimer(3000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    binding.lastStatus.text = getString(R.string.again_checking)
+                }
+
+                override fun onFinish() {
+                    delayTimer?.cancel()
+                    checkOrderPostDelay()
+                }
+            }.start()
+        })
+    }
+
+    fun checkOrderPostDelay()
+    {
+        Log.d(TAG,"checkOrderPostDelay()")
         val link = userStorage.received_orders[0].order.link
         val uriControl = URIControl(link)
         val type = uriControl.checkType()
@@ -294,13 +322,18 @@ class ReactionFragment : Fragment() {
 
     private fun updateBy404()
     {
+        Log.d(TAG,"updateBy404()")
         updateOrder(2,userStorage.received_orders[0].id)
         removeFirstOrder()
     }
 
     private fun updateOrder(status : Int,order_id:Int)
     {
-        Log.d(TAG,"updateOrder()")
+        if (status != 1)
+            viewModel.actionErrorCount.value = viewModel.actionErrorCount.value?:0 + 1
+        else
+            viewModel.actionErrorCount.value = 0
+
         val api = (BFClient(requireActivity())).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.check(status,order_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -315,9 +348,16 @@ class ReactionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        stopAllActions()
+    }
+
+    private fun stopAllActions()
+    {
         binding.webView.destroy()
-        timer?.cancel()
         compositeDisposable?.clear()
+        timer?.cancel()
+        delayTimer?.cancel()
+        myWebViewClient.isJSExecuted = false
     }
 
     private class MyWebViewClient(val reactionFragment: ReactionFragment) : WebViewClient() {

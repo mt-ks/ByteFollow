@@ -22,6 +22,9 @@ class LogoutDialog(
     private lateinit var dialog: Dialog
     private val userStorage : UserStorage = UserStorage(activity)
 
+    var customTitle : String? = null
+    var customMessage : String? = null
+
     fun start()
     {
         _binding = DialogLogoutBinding.inflate(LayoutInflater.from(activity))
@@ -31,6 +34,12 @@ class LogoutDialog(
         dialog.setCancelable(false)
         dialog.setContentView(binding.root)
         dialog.show()
+
+        if (customTitle != null && customMessage != null)
+        {
+            binding.title.text = customTitle
+            binding.description.text = customMessage
+        }
 
         binding.ok.setOnClickListener { logout() }
 

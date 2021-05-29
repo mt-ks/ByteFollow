@@ -10,6 +10,7 @@
 
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:text="@string/youre_logout"
         android:textSize="25dp"
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/description"
         android:layout_marginTop="10dp"
         android:textAlignment="center"
         android:text="@string/session_expired_desc"

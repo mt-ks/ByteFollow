@@ -31,4 +31,7 @@ interface BFApi {
                  @Field("type") type : Int
     ) : Observable<CheckOrderResponse>
 
+    @GET("order/list")
+    fun getOrders() : Observable<MyOrdersResponse>
+
 }

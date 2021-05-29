@@ -12,6 +12,10 @@ class ReactionViewModel : ViewModel() {
         MutableLiveData<ArrayList<OrderModel>>()
     }
 
+    val actionErrorCount : MutableLiveData<Int> by lazy{
+        MutableLiveData<Int>()
+    }
+
     val waitOrderTime : MutableLiveData<Int> by lazy{
         MutableLiveData<Int>()
     }

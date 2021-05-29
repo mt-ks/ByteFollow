@@ -17,6 +17,7 @@ import com.fastfollow.bytefollow.databinding.DialogNewOrderBinding
 import com.fastfollow.bytefollow.databinding.FragmentSearchBinding
 import com.fastfollow.bytefollow.service.BFApi
 import com.fastfollow.bytefollow.service.BFClient
+import com.fastfollow.bytefollow.service.BFErrorHandler
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 import com.fastfollow.bytefollow.ui.search.SearchViewModel
@@ -110,7 +111,8 @@ class NewOrderDialog (private var activity : Activity,
                 loadingDialog.stop()
                 if(it is HttpException)
                 {
-
+                    val error = (BFErrorHandler(activity,it))
+                    toast(error.message)
                 }else{
                     toast(activity.getString(R.string.an_error_occurred))
                 }

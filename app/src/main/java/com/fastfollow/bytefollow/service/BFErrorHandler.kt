@@ -23,6 +23,10 @@ class BFErrorHandler(private val activity: Activity, err : Throwable) {
     {
         try{
             val jsonObject = JSONObject(response)
+            if(jsonObject.has("message"))
+            {
+                message = jsonObject.getString("message")
+            }
             checkHasUpdate(jsonObject)
             checkIsLogout(jsonObject)
         }catch (e : Exception) { }

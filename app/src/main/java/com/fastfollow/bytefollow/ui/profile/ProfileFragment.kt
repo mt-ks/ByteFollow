@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
+import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentProfileBinding
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
 import com.fastfollow.bytefollow.model.OembedResponse
@@ -29,6 +32,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!
     private var compositeDisposable : CompositeDisposable?= null
     private lateinit var userStorage : UserStorage
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,6 +49,7 @@ class ProfileFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
 
         viewModel.userDetail.observe(viewLifecycleOwner,{
             try{
@@ -60,6 +65,10 @@ class ProfileFragment : Fragment() {
             getMeInfo()
             getProfileDetail()
         }
+
+        binding.earnCoinButton.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_reactionFragment) }
+        binding.newOrderArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_searchFragment) }
+        binding.ordersArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_ordersFragment) }
     }
 
 
@@ -95,6 +104,7 @@ class ProfileFragment : Fragment() {
                it.printStackTrace()
             }))
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
