@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "888809653224",
+    "project_id": "bytefollow",
+    "storage_bucket": "bytefollow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888809653224:android:8ecb27562be45cde851a5d",
+        "android_client_info": {
+          "package_name": "com.fastfollow.bytefollow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888809653224-4dkea8gqh76k3lu0oh18vm8sqcgmll3i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5JJyb-wSl2BhLI_UUeI5FmeS9yihWAxU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888809653224-4dkea8gqh76k3lu0oh18vm8sqcgmll3i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

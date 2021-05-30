@@ -19,6 +19,12 @@
         <action
             android:id="@+id/action_profileFragment_to_ordersFragment"
             app:destination="@id/ordersFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_promotionFragment"
+            app:destination="@id/promotionFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_referenceFragment"
+            app:destination="@id/referenceFragment" />
     </fragment>
 
     <fragment
@@ -36,6 +42,21 @@
         android:id="@+id/ordersFragment"
         android:name="com.fastfollow.bytefollow.ui.orders.OrdersFragment"
         android:label="OrdersFragment" />
+    <fragment
+        tools:layout="@layout/fragment_promotion"
+        android:id="@+id/promotionFragment"
+        android:name="com.fastfollow.bytefollow.ui.promotion.PromotionFragment"
+        android:label="PromotionFragment" />
+    <fragment
+        tools:layout="@layout/fragment_reference"
+        android:id="@+id/referenceFragment"
+        android:name="com.fastfollow.bytefollow.ui.reference.ReferenceFragment"
+        android:label="ReferenceFragment" />
+    <fragment
+        tools:layout="@layout/fragment_settings"
+        android:id="@+id/settingsFragment"
+        android:name="com.fastfollow.bytefollow.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" />
 
 
 </navigation>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minWidth="350dp"
+    android:background="@drawable/card_bg"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:text="@string/enter_ref_code"
+        android:textSize="25dp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:layout_height="wrap_content" />
+
+
+
+    <EditText
+        android:layout_marginTop="10dp"
+        android:id="@+id/refCode"
+        android:drawableStart="@drawable/ic_reference_extra_24"
+        android:drawablePadding="10dp"
+        android:background="@drawable/edittext"
+        android:padding="15dp"
+        android:textSize="13sp"
+        android:hint="@string/ref_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/confirmRefCode"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:text="@string/confirm"
+        android:textSize="12sp"
+        android:backgroundTint="@color/black"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

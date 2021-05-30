@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">ByteFollow</string>
-    <string name="_0">0</string>
+    <string name="app_name" translatable="false">ByteFollow</string>
+    <string name="_0" translatable="false">0</string>
     <string name="following">Takip Ediliyor</string>
     <string name="followers">Takipçiler</string>
     <string name="likes">Beğeniler</string>
-    <string name="three_dot">...</string>
+    <string name="three_dot" translatable="false">...</string>
     <string name="earn_coin">Jeton Kazan</string>
     <string name="my_orders">Siparişlerim</string>
     <string name="new_order">Yeni Sipariş</string>
@@ -18,7 +18,7 @@
     <string name="private_profile">Gizli hesaplara işlem yapamazsınız!</string>
     <string name="post_not_found">Gönderi bulunamadı.</string>
 
-    <string name="maximum_x">Maximum: %s</string>
+    <string name="maximum_x" translatable="false">Maximum: %s</string>
     <string name="quantity_limit">Miktar en az 10 olmalıdır!</string>
     <string name="youre_logout">Çıkış yaptınız.</string>
     <string name="session_expired_desc">Oturumunuz sona erdi, lütfen yeniden giriş yapınız.</string>
@@ -26,12 +26,12 @@
     <string name="update_app">Uygulamayı Güncelle</string>
     <string name="update_app_desc">ByteFollow\'un yeni sürümü mevcut. Devam edebilmek için aşağıdaki bağlantıdan uygulamanızı güncelleyebilirsiniz.</string>
     <string name="update">Güncelle</string>
-    <string name="max_0">Max: 0</string>
+    <string name="max_0" translatable="false">Max: 0</string>
     <string name="add_new_order">Sipariş Ver</string>
-    <string name="x_coin">0 coin</string>
-    <string name="login_with_tiktok">Login with tiktok</string>
-    <string name="login_description">By logging in you agree to the terms of use.</string>
-    <string name="terms_of_use">Terms of Use</string>
+    <string name="x_coin">0 Jeton</string>
+    <string name="login_with_tiktok">Tiktok İle Giriş Yap</string>
+    <string name="login_description">Giriş yaparak kullanım koşullarını kabul etmiş olursunuz</string>
+    <string name="terms_of_use">Kullanım Koşulları</string>
     <string name="search">Ara</string>
     <string name="username_or_link">Kullanıcı adı veya link</string>
 
@@ -51,5 +51,26 @@
     <string name="order_completed">Tamamlandı</string>
     <string name="order_in_progress">İşlemde</string>
     <string name="order_canceled">İptal edildi</string>
+    <string name="confirm">Onayla</string>
+    <string name="promo_code_title">Promosyon Kodu</string>
+    <string name="promo_code_description">Bir promosyon kodunuz var ise hemen girerek jeton kazanabilirsiniz.</string>
+    <string name="incorrect_promotion_code">Geçersiz promosyon kodu</string>
+    <string name="enter_ref_code">Referans Kodu Gir</string>
+    <string name="copy_ref_code">Referans kodunu kopyala</string>
+    <string name="reference_description">Arkadaşlarını davet et ve her işlemden +1 jeton kazan</string>
+    <string name="copied">Koypalandı</string>
+    <string name="ref_code">Referans kodu</string>
+    <string name="incorrect_ref_code">Geçersiz referans kodu</string>
+    <string name="you_have_x_reference">%s adet referansınız mevcut!</string>
+    <string name="logout">Çıkış Yap</string>
+    <string name="settings">Ayarlar</string>
+    <string name="earn_credit">Jeton Kazan</string>
+    <string name="profile">Profil</string>
+    <string name="language">Dil</string>
+    <string name="are_you_sure_logout">Çıkış yapmak istediğinize emin misiniz?</string>
 
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+
+    <string name="timeout_order">Sipariş zaman aşımına uğradı!</string>
 </resources>

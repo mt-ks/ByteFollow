@@ -239,4 +239,8 @@ class SearchFragment : SearchAdapter.OnVideoClickListener,Fragment() {
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        compositeDisposable?.clear()
+    }
 }

@@ -56,7 +56,7 @@ class ProfileFragment : Fragment() {
                 binding.usernameField.text = it.user.uniqueId
                 binding.followersCount.text = it.stats.followerCount.toString()
                 binding.followingCount.text = it.stats.followingCount.toString()
-                binding.likesCount.text = it.stats.diggCount.toString()
+                binding.likesCount.text = it.stats.heartCount.toString()
                 Glide.with(requireContext()).load(it.user.avatarLarger).into(binding.userAvatar)
             }catch (e : Exception){ }
         });
@@ -69,6 +69,8 @@ class ProfileFragment : Fragment() {
         binding.earnCoinButton.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_reactionFragment) }
         binding.newOrderArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_searchFragment) }
         binding.ordersArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_ordersFragment) }
+        binding.promotionArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_promotionFragment) }
+        binding.referenceArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_referenceFragment) }
     }
 
 

@@ -20,6 +20,10 @@ class ReactionViewModel : ViewModel() {
         MutableLiveData<Int>()
     }
 
+    val allActionDelaySecond : MutableLiveData<Int> by lazy{
+        MutableLiveData<Int>()
+    }
+
     val reactionDisplayUrl : MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }

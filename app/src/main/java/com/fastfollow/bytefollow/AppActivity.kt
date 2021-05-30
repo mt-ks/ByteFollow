@@ -3,32 +3,33 @@ package com.fastfollow.bytefollow
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.WindowManager
 import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.fastfollow.bytefollow.databinding.ActivityAppBinding
+import com.fastfollow.bytefollow.helpers.SocketConnector
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 
-class AppActivity : AppCompatActivity() {
+class AppActivity : BaseActivity() {
 
     private val viewModel : ProfileViewModel by viewModels()
     private lateinit var binding : ActivityAppBinding
     private lateinit var storage  :UserStorage
+    private var socketConnector: SocketConnector? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         storage = UserStorage(this)
         checkAuth()
         binding = ActivityAppBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
         initClient()
+
+        socketConnector = SocketConnector(this,"DEFAULT")
 
         val navHostFragment : NavHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navHostFragment.navController)
@@ -55,4 +56,8 @@ class AppActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        socketConnector?.disconnect()
+    }
 }

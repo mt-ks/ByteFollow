@@ -34,4 +34,15 @@ interface BFApi {
     @GET("order/list")
     fun getOrders() : Observable<MyOrdersResponse>
 
+    @FormUrlEncoded
+    @POST("promotion/confirm")
+    fun confirmPromotion(@Field("promotion_name") promotionName: String) : Observable<PromotionResponse>
+
+    @FormUrlEncoded
+    @POST("reference/set")
+    fun setReference(@Field("ref_code") ref_code : String) : Observable<GenericResponse>
+
+    @GET("reference/get")
+    fun getReference() : Observable<ReferenceResponse>
+
 }

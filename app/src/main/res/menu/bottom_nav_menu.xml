@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/profileFragment"
-        android:title="Profile"
+        android:title="@string/profile"
 
         android:icon="@drawable/ic_user"/>
     <item
         android:id="@+id/reactionFragment"
-        android:title="Earn Credit"
+        android:title="@string/earn_credit"
         android:icon="@drawable/ic_rocket"/>
     <item
         android:id="@+id/searchFragment"
-        android:title="Search"
+        android:title="@string/search"
         android:icon="@drawable/ic_search"/>
-<!--    <item-->
-<!--        android:id="@+id/settings"-->
-<!--        android:title="Settings"-->
-<!--        android:icon="@drawable/ic_settings"/>-->
+    <item
+        android:id="@+id/settingsFragment"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings"/>
 </menu>

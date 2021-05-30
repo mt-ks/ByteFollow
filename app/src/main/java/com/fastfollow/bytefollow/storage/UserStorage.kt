@@ -45,6 +45,13 @@ class UserStorage(var context: Context) {
     val language: String
         get() = Locale.getDefault().language;
 
+    var customLanguage : String
+        get() {
+            return sharedPreferences.getString("custom_language",null)?:language
+
+        }
+        set(value) { sharedPreferences.edit().putString("custom_language",value).apply() }
+
     var meInfo : MeResponse
         get() { val info = sharedPreferences.getString("me_info","{}"); return Gson().fromJson(info,MeResponse::class.java) }
         set(value) { sharedPreferences.edit().putString("me_info",Gson().toJson(value)).apply() }
@@ -63,6 +70,7 @@ class UserStorage(var context: Context) {
             val json : String = Gson().toJson(value)
             sharedPreferences.edit().putString("received_orders",json).apply()
         }
+
 
     fun clearDB()
     {

@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
 import com.fastfollow.bytefollow.dialogs.LogoutDialog
+import com.fastfollow.bytefollow.helpers.SocketConnector
 import com.fastfollow.bytefollow.helpers.URIControl
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
 import com.fastfollow.bytefollow.service.BFApi
@@ -36,7 +37,7 @@ import kotlin.math.roundToInt
 class ReactionFragment : Fragment() {
 
     private val TAG = "ReactionFragment"
-    private val countDownSeconds = 10
+    private val countDownSeconds = 60
     private val viewModel : ReactionViewModel by activityViewModels()
     private val profileViewModel : ProfileViewModel by activityViewModels()
     private var _binding : FragmentReactionBinding? = null
@@ -46,12 +47,15 @@ class ReactionFragment : Fragment() {
     private lateinit var userStorage: UserStorage
     private var timer : CountDownTimer? = null
     private var delayTimer : CountDownTimer? = null;
+    private var actionTimeout : CountDownTimer? = null
+    private var socketConnector : SocketConnector? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentReactionBinding.inflate(inflater,container,false)
         compositeDisposable = CompositeDisposable()
         myWebViewClient = MyWebViewClient(this);
         userStorage = UserStorage(requireContext())
+        socketConnector = SocketConnector(requireContext(),"BACKGROUND")
         return _binding!!.root
     }
 
@@ -90,6 +94,8 @@ class ReactionFragment : Fragment() {
 
     private fun receiveOrders()
     {
+        actionTimeout?.cancel()
+        timeoutDelayCheck()
         val errorsCount = viewModel.actionErrorCount.value?:0
         if(errorsCount > 15)
         {
@@ -156,6 +162,8 @@ class ReactionFragment : Fragment() {
             }.start()
         })
     }
+
+
 
     fun checkOrderPostDelay()
     {
@@ -285,6 +293,29 @@ class ReactionFragment : Fragment() {
     }
 
 
+    private fun timeoutDelayCheck()
+    {
+        actionTimeout = object : CountDownTimer(60*1000,1000){
+            override fun onTick(p0: Long) {
+                val second = (p0 / 1000).toInt()
+                if (second != 0)
+                    viewModel.allActionDelaySecond.value = second
+
+                Log.d(TAG,"Delay second is: $second")
+            }
+
+            override fun onFinish() {
+                Log.d(TAG,"on finished timer")
+                actionTimeout?.cancel()
+                delayTimer?.cancel()
+                timer?.cancel()
+                compositeDisposable?.clear()
+                updateBy404()
+                binding.lastStatus.text = getString(R.string.timeout_order)
+            }
+
+        }.start()
+    }
 
     private fun countDownInit(seconds : Int)
     {
@@ -298,6 +329,7 @@ class ReactionFragment : Fragment() {
             override fun onTick(p0: Long) {
                 val remainSecond = (p0 / 1000).toDouble().roundToInt()
                 Log.d(TAG, "remains$remainSecond")
+                actionTimeout?.cancel()
                 if (remainSecond != 0) viewModel.waitOrderTime.value = remainSecond
             }
 
@@ -329,6 +361,7 @@ class ReactionFragment : Fragment() {
 
     private fun updateOrder(status : Int,order_id:Int)
     {
+
         if (status != 1)
             viewModel.actionErrorCount.value = viewModel.actionErrorCount.value?:0 + 1
         else
@@ -338,8 +371,10 @@ class ReactionFragment : Fragment() {
         compositeDisposable?.add(api.check(status,order_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 profileViewModel.currentCredit.value = it.client
+                actionTimeout?.cancel()
                 receiveOrders()
             },{
+                actionTimeout?.cancel()
                 errorHandler(it)
             }))
     }
@@ -355,9 +390,11 @@ class ReactionFragment : Fragment() {
     {
         binding.webView.destroy()
         compositeDisposable?.clear()
+        actionTimeout?.cancel()
         timer?.cancel()
         delayTimer?.cancel()
         myWebViewClient.isJSExecuted = false
+        socketConnector?.disconnect()
     }
 
     private class MyWebViewClient(val reactionFragment: ReactionFragment) : WebViewClient() {
@@ -412,14 +449,7 @@ class ReactionFragment : Fragment() {
 
     private fun errorHandler(it : Throwable)
     {
-        if (it is HttpException)
-        {
-            if (it.code() == 404)
-            {
-                updateBy404()
-            }
-        }
-        receiveOrders()
+        updateBy404()
     }
 
 }

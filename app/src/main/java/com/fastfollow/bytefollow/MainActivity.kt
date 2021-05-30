@@ -1,16 +1,12 @@
 package com.fastfollow.bytefollow
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import com.fastfollow.bytefollow.databinding.ActivityMainBinding
 import com.fastfollow.bytefollow.storage.UserStorage
-import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
+import com.google.firebase.FirebaseApp
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -20,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
     }
 
     private fun checkAuth()

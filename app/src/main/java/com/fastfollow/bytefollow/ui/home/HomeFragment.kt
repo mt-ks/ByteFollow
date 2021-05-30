@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentHomeBinding
 import com.fastfollow.bytefollow.databinding.FragmentLoginBinding
+import java.lang.RuntimeException
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
