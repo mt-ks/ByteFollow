@@ -14,6 +14,8 @@ import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentProfileBinding
+import com.fastfollow.bytefollow.helpers.SessionChecker
+import com.fastfollow.bytefollow.helpers.SessionInterface
 import com.fastfollow.bytefollow.helpers.UserRequireChecker
 import com.fastfollow.bytefollow.model.OembedResponse
 import com.fastfollow.bytefollow.service.*
@@ -26,7 +28,7 @@ import retrofit2.Call
 import retrofit2.Callback;
 import retrofit2.Response
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : SessionInterface, Fragment() {
     private val viewModel : ProfileViewModel by activityViewModels()
     private var _binding : FragmentProfileBinding? = null
     private val binding get() = _binding!!
@@ -64,6 +66,7 @@ class ProfileFragment : Fragment() {
         binding.swipeRefreshProfile.setOnRefreshListener {
             getMeInfo()
             getProfileDetail()
+            SessionChecker(requireActivity(),this)
         }
 
         binding.earnCoinButton.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_reactionFragment) }
@@ -111,6 +114,10 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         compositeDisposable?.clear()
+    }
+
+    override fun onSessionExpired() {
+
     }
 
 

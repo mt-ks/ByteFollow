@@ -73,4 +73,8 @@
     <string name="no">Hayır</string>
 
     <string name="timeout_order">Sipariş zaman aşımına uğradı!</string>
+
+    <string name="tiktok_limit">Tiktok Limit</string>
+    <string name="tiktok_limit_desc">Görünüşe göre bazı işlemleri yaparken hesabınız kısıtlandı! Kredi kazanmaya devam edebilmek için farklı bir hesapla giriş yapmayı deneyin.</string>
+    <string name="reaction_warning">Bu sayfadan ayrıldığınızda takip ve beğeni işlemleri otomatik duraklatılır. Kredi kazanmak için bu ekrandan ayrılmayın.</string>
 </resources>

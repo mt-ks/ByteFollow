@@ -88,7 +88,7 @@
                 <TextView
                     android:textSize="12sp"
                     android:textAlignment="center"
-                    android:text="Bu sayfadan ayrıldığınızda takip ve beğeni işlemleri otomatik duraklatılır. Kredi kazanmak için bu ekrandan ayrılmayın."
+                    android:text="@string/reaction_warning"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>

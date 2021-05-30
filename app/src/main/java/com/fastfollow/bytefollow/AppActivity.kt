@@ -7,12 +7,14 @@ import androidx.activity.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.fastfollow.bytefollow.databinding.ActivityAppBinding
+import com.fastfollow.bytefollow.helpers.SessionChecker
+import com.fastfollow.bytefollow.helpers.SessionInterface
 import com.fastfollow.bytefollow.helpers.SocketConnector
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 import com.onesignal.OneSignal
 
-class AppActivity : BaseActivity() {
+class AppActivity : SessionInterface, BaseActivity() {
 
     private val viewModel : ProfileViewModel by viewModels()
     private lateinit var binding : ActivityAppBinding
@@ -28,6 +30,7 @@ class AppActivity : BaseActivity() {
         val view = binding.root
         setContentView(view)
         initClient()
+        SessionChecker(this,this)
         socketConnector = SocketConnector(this,"DEFAULT")
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
         OneSignal.initWithContext(this)
@@ -60,5 +63,9 @@ class AppActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
         socketConnector?.disconnect()
+    }
+
+    override fun onSessionExpired() {
+
     }
 }

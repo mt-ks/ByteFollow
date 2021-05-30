@@ -54,7 +54,7 @@ class SearchFragment : SearchAdapter.OnVideoClickListener,Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentSearchBinding.inflate(inflater,container,false)
         compositeDisposable = CompositeDisposable()

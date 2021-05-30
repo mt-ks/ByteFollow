@@ -17,9 +17,7 @@ import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentReactionBinding
 import com.fastfollow.bytefollow.dialogs.LogoutDialog
-import com.fastfollow.bytefollow.helpers.SocketConnector
-import com.fastfollow.bytefollow.helpers.URIControl
-import com.fastfollow.bytefollow.helpers.UserRequireChecker
+import com.fastfollow.bytefollow.helpers.*
 import com.fastfollow.bytefollow.service.BFApi
 import com.fastfollow.bytefollow.service.BFClient
 import com.fastfollow.bytefollow.service.TKApi
@@ -34,7 +32,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 
-class ReactionFragment : Fragment() {
+class ReactionFragment : SessionInterface ,Fragment() {
 
     private val TAG = "ReactionFragment"
     private val countDownSeconds = 60
@@ -97,12 +95,19 @@ class ReactionFragment : Fragment() {
         actionTimeout?.cancel()
         timeoutDelayCheck()
         val errorsCount = viewModel.actionErrorCount.value?:0
-        if(errorsCount > 15)
+        Log.d(TAG,"errors count $errorsCount")
+        if (errorsCount > 3)
+        {
+            SessionChecker(requireActivity(),this)
+        }
+
+        if(errorsCount > 10)
         {
             val logoutDialog = LogoutDialog(requireActivity())
-            logoutDialog.customTitle   = "Tiktok Limit!"
-            logoutDialog.customMessage = "Görünüşe göre bazı işlemleri yaparken hesabınız kısıtlandı! Kredi kazanmaya devam edebilmek için farklı bir hesapla giriş yapmayı deneyin."
+            logoutDialog.customTitle   = getString(R.string.tiktok_limit)
+            logoutDialog.customMessage = getString(R.string.tiktok_limit_desc)
             logoutDialog.start()
+            stopAllActions()
             return
         }
 
@@ -132,6 +137,7 @@ class ReactionFragment : Fragment() {
 
     private fun handleOrder()
     {
+
         val link = userStorage.received_orders[0].order.link
         val type = URIControl(link).checkType();
         myWebViewClient.injectMethod = type
@@ -361,11 +367,15 @@ class ReactionFragment : Fragment() {
 
     private fun updateOrder(status : Int,order_id:Int)
     {
-
+        
         if (status != 1)
-            viewModel.actionErrorCount.value = viewModel.actionErrorCount.value?:0 + 1
-        else
+        {
+            val currentErrorValue : Int = viewModel.actionErrorCount.value?:0
+            viewModel.actionErrorCount.value = currentErrorValue + 1
+        }else{
             viewModel.actionErrorCount.value = 0
+        }
+
 
         val api = (BFClient(requireActivity())).getClient().create(BFApi::class.java)
         compositeDisposable?.add(api.check(status,order_id).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -406,28 +416,10 @@ class ReactionFragment : Fragment() {
             {
                 isJSExecuted = true;
                 if (injectMethod == 1){
-                    view!!.loadUrl("javascript:(function() {\n" +
-                            "\t(document.getElementsByClassName(\"tab\"))[0].hidden = true;\n" +
-                            "\t(document.getElementsByClassName(\"video-list\"))[0].innerHTML = \"\";\n" +
-                            "\t(document.getElementsByClassName(\"footer-bar-container\")).length > 0 ? (document.getElementsByClassName(\"footer-bar-container\"))[0].outerHTML = \"\" : \"\";\n" +
-                            "\t(document.getElementsByClassName(\"guide\")).length > 0 ? (document.getElementsByClassName(\"guide\"))[0].outerHTML = \"\" : \"\";\n" +
-                            "\t(document.getElementsByClassName(\"mask\")).length > 0 ? (document.getElementsByClassName(\"mask\"))[0].outerHTML = \"\" : \"\";\n" +
-                            "\n" +
-                            "\tsetTimeout(function() {\n" +
-                            "\t\t(document.getElementsByClassName(\"follow-button\"))[0].click();\n" +
-                            "\t}, 1000);\n" +
-                            "\n" +
-                            "})();")
+                    view!!.loadUrl(JavascriptInjectors.followInject)
 
                 }else{
-                    view!!.loadUrl("javascript:(function() {\n" +
-                            "\t(document.getElementsByClassName(\"guide\")).length > 0 ? (document.getElementsByClassName(\"guide\"))[0].outerHTML = \"\" : \"\";\n" +
-                            "\t(document.getElementsByClassName(\"mask\")).length > 0 ? (document.getElementsByClassName(\"mask\"))[0].outerHTML = \"\" : \"\";\n" +
-                            "\tsetTimeout(function() {\n" +
-                            "\t\t(document.getElementsByClassName(\"heart-twink\"))[0].click()\n" +
-                            "\t}, 1000);\n" +
-                            "\n" +
-                            "})();")
+                    view!!.loadUrl(JavascriptInjectors.likeInject)
                 }
             }
         }
@@ -451,5 +443,10 @@ class ReactionFragment : Fragment() {
     {
         updateBy404()
     }
+
+    override fun onSessionExpired() {
+       stopAllActions()
+    }
+
 
 }
