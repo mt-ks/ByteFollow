@@ -1,7 +1,6 @@
 package com.fastfollow.bytefollow
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
@@ -11,6 +10,7 @@ import com.fastfollow.bytefollow.databinding.ActivityAppBinding
 import com.fastfollow.bytefollow.helpers.SocketConnector
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
+import com.onesignal.OneSignal
 
 class AppActivity : BaseActivity() {
 
@@ -28,9 +28,10 @@ class AppActivity : BaseActivity() {
         val view = binding.root
         setContentView(view)
         initClient()
-
         socketConnector = SocketConnector(this,"DEFAULT")
-
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+        OneSignal.initWithContext(this)
+        OneSignal.setAppId(BuildConfig.ONEHASHKEY)
         val navHostFragment : NavHostFragment = supportFragmentManager.findFragmentById(binding.navHostFragment.id) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavigationView,navHostFragment.navController)
     }

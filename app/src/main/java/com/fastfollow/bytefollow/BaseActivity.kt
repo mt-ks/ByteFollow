@@ -10,6 +10,8 @@ import java.util.*
 
 open class BaseActivity : AppCompatActivity() {
 
+
+
     override fun attachBaseContext(newBase: Context) {
         val userStorage : UserStorage = UserStorage(newBase)
         var customLanguage = userStorage.customLanguage

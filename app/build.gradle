@@ -2,6 +2,9 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+    id 'com.google.secrets_gradle_plugin' version'0.4'
+
 }
 apply plugin : 'com.google.firebase.crashlytics'
 android {
@@ -79,6 +82,8 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
+
+    implementation 'com.onesignal:OneSignal:4.4.0'
 
 
 }
