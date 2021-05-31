@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textColorHint="@color/colorGray"
             android:id="@+id/searchInput"
             android:inputType="textShortMessage"
             android:drawableStart="@drawable/ic_search_24"
@@ -24,6 +25,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content" />
         <Button
+            android:textColor="@color/white"
             android:id="@+id/searchButton"
             android:layout_marginRight="10dp"
             android:layout_gravity="center"

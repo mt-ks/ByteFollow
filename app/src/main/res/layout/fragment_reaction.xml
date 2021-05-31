@@ -43,6 +43,7 @@
                     android:layout_height="wrap_content" />
 
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:layout_marginTop="5dp"
                     android:textSize="12sp"
                     android:id="@+id/last_status"
@@ -52,6 +53,8 @@
                     android:layout_height="wrap_content" />
 
                 <ProgressBar
+                    android:textColor="@color/colorGray"
+
                     android:id="@+id/stateProgress"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:max="100"
@@ -70,6 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:id="@+id/reaction_status"
                     android:textAlignment="center"
                     android:textSize="10sp"
@@ -86,6 +90,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_height="wrap_content">
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:textSize="12sp"
                     android:textAlignment="center"
                     android:text="@string/reaction_warning"

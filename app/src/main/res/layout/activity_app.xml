@@ -3,11 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     tools:context=".AppActivity">
 
     <LinearLayout
-        android:background="@color/white"
+        android:background="@color/design_default_color_on_primary"
         android:elevation="2dp"
         android:id="@+id/menuArea"
         android:layout_width="match_parent"
@@ -87,6 +88,7 @@
         app:navGraph="@navigation/user_nav_graph" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:background="@android:color/white"
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="60dp"

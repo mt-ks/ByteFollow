@@ -49,6 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:textAlignment="center"
                     android:text="@string/following"
                     android:textSize="11sp"
@@ -71,6 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:textAlignment="center"
                     android:text="@string/followers"
                     android:textSize="11sp"
@@ -93,6 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:textColor="@color/colorGray"
                     android:textAlignment="center"
                     android:text="@string/likes"
                     android:textSize="11sp"

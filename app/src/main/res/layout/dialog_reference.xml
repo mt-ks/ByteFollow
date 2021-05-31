@@ -20,6 +20,7 @@
 
 
     <EditText
+        android:textColorHint="@color/colorGray"
         android:layout_marginTop="10dp"
         android:id="@+id/refCode"
         android:drawableStart="@drawable/ic_reference_extra_24"
@@ -33,6 +34,7 @@
 
 
     <Button
+        android:textColor="@color/white"
         android:id="@+id/confirmRefCode"
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
