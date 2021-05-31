@@ -31,7 +31,7 @@ class BFClient(private val context: Context) {
                 .addHeader("device_name", Build.BRAND + " - " + Build.MODEL)
                 .addHeader("ig_id", userID)
                 .addHeader("accept-language", userStorage.language)
-                .addHeader("locale-country", userStorage.country)
+                .addHeader("locale-country", userStorage.language)
             chain.proceed(request.build())
         })
         httpClient.addInterceptor(InterceptorEnc())
