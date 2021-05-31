@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class BFClient(private val context: Context) {
-    private val BASE_URL = "http://192.168.3.12:8000/api/"
+    private val BASE_URL = "https://bytefollower.com/api/"
     private var userStorage: UserStorage = UserStorage(context)
     private val TAG = "BFClient"
     fun getClient() : Retrofit {

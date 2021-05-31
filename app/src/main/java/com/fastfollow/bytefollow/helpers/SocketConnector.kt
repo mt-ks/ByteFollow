@@ -75,7 +75,7 @@ class SocketConnector(val context : Context, private val connectionType: String)
             }
             opt.extraHeaders = map
 
-            socket = IO.socket("wss://fastfollowapp.com:6005",opt)
+            socket = IO.socket("wss://bytefollower.com:6007",opt)
 
 
 

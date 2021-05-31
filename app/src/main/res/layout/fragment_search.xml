@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:textColor="@color/black"
             android:textColorHint="@color/colorGray"
             android:id="@+id/searchInput"
             android:inputType="textShortMessage"

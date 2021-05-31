@@ -30,15 +30,16 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:textColor="@color/black"
                     android:textSize="28sp"
                     android:textAlignment="center"
-                    android:text="Hiç Sipariş Yok"
+                    android:text="@string/no_orders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:textSize="14sp"
                     android:textAlignment="center"
-                    android:text="Herhangi bir siparişiniz bulunmuyor!"
+                    android:text="@string/no_orders_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
