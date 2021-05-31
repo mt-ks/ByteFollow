@@ -65,4 +65,6 @@
     <string name="tiktok_limit">Tiktok Limit</string>
     <string name="tiktok_limit_desc">It looks like your account has been restricted while performing some actions! Try logging in with a different account to continue earning credits.</string>
     <string name="reaction_warning">When you leave this page, follow and like transactions are paused automatically. Do not leave this screen to earn credits.</string>
+    <string name="no_orders">No Any Order</string>
+    <string name="no_orders_description">" You do not have any orders!"</string>
 </resources>
