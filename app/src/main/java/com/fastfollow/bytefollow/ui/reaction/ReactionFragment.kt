@@ -213,7 +213,10 @@ class ReactionFragment : SessionInterface ,Fragment() {
                 {
                     viewModel.reactionDisplayUrl.value = user.userDetail.user.avatarLarger
                     viewModel.reactionUsername.value = user.userDetail.user.uniqueId
-                    if (user.userDetail.user.relation == 1)
+                    if(user.userDetail.user.id == userStorage.userDetail.user.id){
+                        updateOrder(4,userStorage.received_orders[0].id)
+                        removeFirstOrder()
+                    }else if (user.userDetail.user.relation == 1)
                     {
                         updateOrder(4,userStorage.received_orders[0].id)
                         removeFirstOrder()
