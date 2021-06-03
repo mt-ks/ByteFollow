@@ -28,6 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+import java.lang.Exception
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -76,6 +77,12 @@ class ReactionFragment : SessionInterface ,Fragment() {
             }
         })
 
+        viewModel.lastStatus.observe(viewLifecycleOwner,{
+            try {
+                binding.lastStatus.text = it
+            }catch (e : Exception){}
+        })
+
         viewModel.reactionStatus.observe(viewLifecycleOwner,{
             binding.reactionStatus.text = it
         })
@@ -111,7 +118,7 @@ class ReactionFragment : SessionInterface ,Fragment() {
             return
         }
 
-        binding.lastStatus.text = getString(R.string.all_orders_checking)
+        viewModel.lastStatus.value = getString(R.string.all_orders_checking)
         if (userStorage.received_orders.size != 0){
             Log.d(TAG,"receiveOrder isNot Empty")
             checkPreviousOrderState()
@@ -130,7 +137,7 @@ class ReactionFragment : SessionInterface ,Fragment() {
                     countDownInit(countDownSeconds)
                 }
             },{
-                binding.lastStatus.text = getString(R.string.receive_order_error_msg)
+                viewModel.lastStatus.value = getString(R.string.receive_order_error_msg)
                 countDownInit(countDownSeconds)
             }))
     }
@@ -145,9 +152,9 @@ class ReactionFragment : SessionInterface ,Fragment() {
         binding.webView.loadUrl(link)
         if(type == 1)
         {
-            binding.lastStatus.text = getString(R.string.user_following)
+            viewModel.lastStatus.value = getString(R.string.user_following)
         }else{
-            binding.lastStatus.text = getString(R.string.video_liking)
+            viewModel.lastStatus.value = getString(R.string.video_liking)
 
         }
     }
@@ -158,7 +165,7 @@ class ReactionFragment : SessionInterface ,Fragment() {
         Handler(Looper.getMainLooper()).post(Runnable {
             delayTimer = object : CountDownTimer(3000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    binding.lastStatus.text = getString(R.string.again_checking)
+                    viewModel.lastStatus.value = getString(R.string.again_checking)
                 }
 
                 override fun onFinish() {
@@ -187,7 +194,7 @@ class ReactionFragment : SessionInterface ,Fragment() {
 
     private fun checkPreviousOrderState()
     {
-        binding.lastStatus.text = getString(R.string.order_checking)
+        viewModel.lastStatus.value = getString(R.string.order_checking)
         binding.stateProgress.visibility = View.VISIBLE
         binding.stateProgress.isIndeterminate = true
 
@@ -320,7 +327,7 @@ class ReactionFragment : SessionInterface ,Fragment() {
                 timer?.cancel()
                 compositeDisposable?.clear()
                 updateBy404()
-                binding.lastStatus.text = getString(R.string.timeout_order)
+                viewModel.lastStatus.value = getString(R.string.timeout_order)
             }
 
         }.start()
@@ -354,7 +361,10 @@ class ReactionFragment : SessionInterface ,Fragment() {
     private fun removeFirstOrder()
     {
         val tmpOrder = userStorage.received_orders
-        tmpOrder.removeAt(0)
+        if (tmpOrder.size > 0)
+        {
+            tmpOrder.removeAt(0)
+        }
         userStorage.received_orders = tmpOrder
         Log.d(TAG,"Orders remains: " + userStorage.received_orders.size)
         myWebViewClient.isJSExecuted = false
@@ -371,12 +381,15 @@ class ReactionFragment : SessionInterface ,Fragment() {
     private fun updateOrder(status : Int,order_id:Int)
     {
         
-        if (status != 1)
+        if (status == 1)
+        {
+            viewModel.actionErrorCount.value = 0
+        }
+
+        if (status != 4 && status !=1)
         {
             val currentErrorValue : Int = viewModel.actionErrorCount.value?:0
             viewModel.actionErrorCount.value = currentErrorValue + 1
-        }else{
-            viewModel.actionErrorCount.value = 0
         }
 
 
@@ -444,7 +457,13 @@ class ReactionFragment : SessionInterface ,Fragment() {
 
     private fun errorHandler(it : Throwable)
     {
-        updateBy404()
+        if(userStorage.received_orders.size > 0)
+        {
+            updateBy404()
+        }else{
+            receiveOrders()
+        }
+
     }
 
     override fun onSessionExpired() {

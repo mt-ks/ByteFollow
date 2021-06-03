@@ -36,4 +36,8 @@ class ReactionViewModel : ViewModel() {
         MutableLiveData<String>()
     }
 
+    val lastStatus : MutableLiveData<String> by lazy{
+        MutableLiveData<String>()
+    }
+
 }

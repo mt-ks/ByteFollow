@@ -7,10 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.Navigation
+import androidx.navigation.Navigator
 import com.bumptech.glide.Glide
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.databinding.FragmentProfileBinding
@@ -69,11 +72,23 @@ class ProfileFragment : SessionInterface, Fragment() {
             SessionChecker(requireActivity(),this)
         }
 
-        binding.earnCoinButton.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_reactionFragment) }
-        binding.newOrderArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_searchFragment) }
-        binding.ordersArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_ordersFragment) }
-        binding.promotionArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_promotionFragment) }
-        binding.referenceArea.setOnClickListener { navController.navigate(R.id.action_profileFragment_to_referenceFragment) }
+        binding.earnCoinButton.setOnClickListener { navController.navigateSafe(R.id.action_profileFragment_to_reactionFragment) }
+        binding.newOrderArea.setOnClickListener { navController.navigateSafe(R.id.action_profileFragment_to_searchFragment) }
+        binding.ordersArea.setOnClickListener { navController.navigateSafe(R.id.action_profileFragment_to_ordersFragment) }
+        binding.promotionArea.setOnClickListener { navController.navigateSafe(R.id.action_profileFragment_to_promotionFragment) }
+        binding.referenceArea.setOnClickListener { navController.navigateSafe(R.id.action_profileFragment_to_referenceFragment) }
+    }
+
+    fun NavController.navigateSafe(
+        @IdRes resId: Int,
+        args: Bundle? = null,
+        navOptions: NavOptions? = null,
+        navExtras: Navigator.Extras? = null
+    ) {
+        val action = currentDestination?.getAction(resId) ?: graph.getAction(resId)
+        if (action != null && currentDestination?.id != action.destinationId) {
+            navigate(resId, args, navOptions, navExtras)
+        }
     }
 
 
