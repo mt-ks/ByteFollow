@@ -2,6 +2,7 @@ package com.fastfollow.bytefollow.service
 
 import android.app.Activity
 import android.util.Log
+import com.fastfollow.bytefollow.AppActivity
 import com.fastfollow.bytefollow.R
 import com.fastfollow.bytefollow.dialogs.LogoutDialog
 import com.fastfollow.bytefollow.dialogs.UpdateDialog
@@ -37,7 +38,12 @@ class BFErrorHandler(private val activity: Activity, err : Throwable) {
         if (jsonObject.has("need_upgrade"))
         {
             val route = jsonObject.getString("route")
-            (UpdateDialog(activity,route)).start()
+            var downloadName = "ByteFollow.apk"
+            if (jsonObject.has("download_name"))
+            {
+               downloadName = jsonObject.getString("download_name")
+            }
+            (UpdateDialog(activity,route,downloadName)).show((activity as AppActivity).supportFragmentManager,"UpdateDialog")
         }
     }
 

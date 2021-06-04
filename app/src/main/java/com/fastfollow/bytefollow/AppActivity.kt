@@ -1,15 +1,18 @@
 package com.fastfollow.bytefollow
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.fastfollow.bytefollow.databinding.ActivityAppBinding
-import com.fastfollow.bytefollow.helpers.SessionChecker
-import com.fastfollow.bytefollow.helpers.SessionInterface
-import com.fastfollow.bytefollow.helpers.SocketConnector
+import com.fastfollow.bytefollow.dialogs.UpdateDialog
+import com.fastfollow.bytefollow.helpers.*
 import com.fastfollow.bytefollow.storage.UserStorage
 import com.fastfollow.bytefollow.ui.profile.ProfileViewModel
 import com.onesignal.OneSignal
@@ -60,6 +63,7 @@ class AppActivity : SessionInterface, BaseActivity() {
         }
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         socketConnector?.disconnect()
@@ -68,4 +72,7 @@ class AppActivity : SessionInterface, BaseActivity() {
     override fun onSessionExpired() {
 
     }
+
+    ///////////// REMOVABLE
+
 }

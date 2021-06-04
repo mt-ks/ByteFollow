@@ -67,4 +67,6 @@
     <string name="reaction_warning">When you leave this page, follow and like transactions are paused automatically. Do not leave this screen to earn credits.</string>
     <string name="no_orders">No Any Order</string>
     <string name="no_orders_description">" You do not have any orders!"</string>
+    <string name="downloaded_s">Downloaded %s</string>
+    <string name="update_failed">Update failed!</string>
 </resources>

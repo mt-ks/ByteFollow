@@ -79,4 +79,6 @@
     <string name="reaction_warning">Bu sayfadan ayrıldığınızda takip ve beğeni işlemleri otomatik duraklatılır. Kredi kazanmak için bu ekrandan ayrılmayın.</string>
     <string name="no_orders">Hiç Sipariş Yok</string>
     <string name="no_orders_description">Herhangi bir siparişiniz bulunmuyor!</string>
+    <string name="downloaded_s">Indirilen %s</string>
+    <string name="update_failed">Güncelleme başarısız!</string>
 </resources>
