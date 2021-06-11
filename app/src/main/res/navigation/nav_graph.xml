@@ -8,12 +8,12 @@
     <fragment
         tools:layout="@layout/fragment_login"
         android:id="@+id/loginFragment"
-        android:name="com.fastfollow.bytefollow.ui.login.LoginFragment"
+        android:name="com.kubernet.bytefollow.ui.login.LoginFragment"
         android:label="LoginFragment" />
     <fragment
         tools:layout="@layout/fragment_home"
         android:id="@+id/homeFragment"
-        android:name="com.fastfollow.bytefollow.ui.home.HomeFragment"
+        android:name="com.kubernet.bytefollow.ui.home.HomeFragment"
         android:label="HomeFragment" >
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"

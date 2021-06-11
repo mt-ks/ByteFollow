@@ -35,7 +35,7 @@
 -keepattributes *Annotation*,EnclosingMethod,Signature,SourceFile,LineNumberTable
  -dontwarn com.fasterxml.jackson.databind.**
 # My POJO class directory
--keep public class com.fastfollow.bytefollow.model** {
+-keep public class com.kubernet.bytefollow.model** {
   public void set*(***);
   public *** get*();
   public protected private *;

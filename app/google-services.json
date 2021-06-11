@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "888809653224",
-    "project_id": "bytefollow",
-    "storage_bucket": "bytefollow.appspot.com"
+    "project_number": "936486045586",
+    "project_id": "bytefollow-d1e42",
+    "storage_bucket": "bytefollow-d1e42.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:888809653224:android:8ecb27562be45cde851a5d",
+        "mobilesdk_app_id": "1:936486045586:android:cdfc3d684a01afa455634b",
         "android_client_info": {
-          "package_name": "com.fastfollow.bytefollow"
+          "package_name": "com.kubernet.bytefollow"
         }
       },
       "oauth_client": [
         {
-          "client_id": "888809653224-4dkea8gqh76k3lu0oh18vm8sqcgmll3i.apps.googleusercontent.com",
+          "client_id": "936486045586-a6gp1t4o0ksl52b4dqht29i231s0lflo.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA5JJyb-wSl2BhLI_UUeI5FmeS9yihWAxU"
+          "current_key": "AIzaSyCWT88n2QhWHvBwJmhiM0YJSLl9r56SHC0"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "888809653224-4dkea8gqh76k3lu0oh18vm8sqcgmll3i.apps.googleusercontent.com",
+              "client_id": "936486045586-a6gp1t4o0ksl52b4dqht29i231s0lflo.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
